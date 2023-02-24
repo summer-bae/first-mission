@@ -60,10 +60,11 @@ const main = () => {
 	initMongo().then(() => {
 		const redisClient = initRedis();
 		const server = initExpress(redisClient);
-		const socket = require('./src/socket/socket');
-		socket(server);
+		
+		// socket.js에 서버 부르기
+		const webSocket = require('./routes/socket/socket');
+		webSocket(server);
 	});
-	
 	
 };
 
