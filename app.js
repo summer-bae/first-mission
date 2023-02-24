@@ -7,9 +7,9 @@ const redisStore = require('connect-redis')(session);
 const redis = require('redis');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const cors = require("cors");
 
 const middlewares = require('./middlewares');
+
 
 const initExpress = redisClient => {
 	const app = express();
@@ -41,8 +41,6 @@ const initExpress = redisClient => {
 	app.use(middlewares.error.logging);
 	app.use(middlewares.error.ajaxHandler);
 	app.use(middlewares.error.handler);
-	/*socket.io cors*/
-	app.use(cors({ origin: "*" }));
 
 	return require('http')
 		.createServer(app)
@@ -62,14 +60,11 @@ const main = () => {
 	initMongo().then(() => {
 		const redisClient = initRedis();
 		const server = initExpress(redisClient);
-		// http server를 socket.io server로 upgrade한다
-		const io = require('socket.io')(server, {
-			cors: {
-				origin: "*",
-				credentials: true,
-			}
-		});
+		const socket = require('./src/socket/socket');
+		socket(server);
 	});
+	
+	
 };
 
 main();
