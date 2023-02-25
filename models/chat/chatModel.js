@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
 
-const chatSchema = mongoose.Schema({
+const chatSchema = {
 	user: {
-		type: mongoose.Types.ObjectId,
+		type: String,
         required: true,
-        ref: "account",
+        // ref: "account",
 	},
 	isWhisper: {
 		type: Boolean,
 		default: false,
 	},
 	toUser: {
-		type: mongoose.Types.ObjectId,
-		ref: "account",
+		type: String,
+		// ref: "account",
 	},
 	message: {
 		type: String,
@@ -23,6 +23,6 @@ const chatSchema = mongoose.Schema({
 		required: true,
 		default: Date.now,
 	},
-});
+};
 
 module.exports = mongoose.model('chat', chatSchema);

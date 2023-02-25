@@ -5,7 +5,7 @@ import axios from 'axios';
 class MessageBox extends React.Component {
 	constructor(props) {
 		super(props);
-		const { user, message, isWhisper, toUser } = this.props;
+		const { userId, message, isWhisper, toUser } = this.props;
 	}
 	
 	render() {

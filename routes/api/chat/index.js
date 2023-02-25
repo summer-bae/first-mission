@@ -31,14 +31,14 @@ const findAllChats = async (user) => {
 const addChat = async (req) => {
 	const data = req.body;
 	
-	const user = await modAccount.findOne({ id: data.user });
-	data.user = user._id;
+	const user = await modAccount.findOne({ id: data.userId });
+	data.user = user.id;
 	
 	if (data.isWhisper) {
 		const toUser = await modAccount.findOne({ id: data.toUser });
-		data.toUser = toUser._id;
+		data.toUser = toUser.id;
 	}
-	
+
 	const isAddChat = await modChat.create(data);
 	
 	return true;

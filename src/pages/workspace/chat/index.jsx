@@ -15,19 +15,18 @@ class Chat extends React.Component {
 		super(props);
 		
 		this.state = {
-			user: '',
-			toUser: '',
-			toSocketId: '',
+			userId: '',
+			toUserId: '',
 			isWhisper: false,
 			message: '',
-			logs: [],
+			allChats: [],
 			currentUserList: []
 		}
 	}
 	
 	sendChat = () => {
 		const nowState = {
-			user: this.state.user,
+			userId: this.state.userId,
 			isWhisper: this.state.isWhisper,
 			message: this.state.message,
 		};
@@ -36,29 +35,94 @@ class Chat extends React.Component {
 			nowState.toUser = this.state.toUser
 		}
 		
-		axios.post('/chat', nowState).then(() => {
-			if (this.state.isWhisper) {
-				nowState.toSocketId = this.state.toSocketId;
-			}
-			
+		axios.post('/api/chat/chat', nowState).then(() => {
 			socket.emit('toMessage', nowState);
 			
 			this.setState({
 				toUser: '',
 				isWhisper: false,
 				message: '',
-				toSocketId: ''
 			});
 		}).catch((error) => {
 			console.error(error);
 		});
 	}
 	
+	mount = () => {
+		axios.get('/api/account/id').then(({ data }) => {
+			this.setState({
+				userId: data
+			})
+			
+			axios.get('/api/chat/all-chats?id=${this.state.userId}').then(({ data }) => {
+				this.setState({
+					allChats: data
+				})
+			})
+			
+			// currentUserList에 담기
+			socket.emit('joinChat', ({
+				id: this.state.userId,
+			}))
+		});
+		
+		// 유저 리스트 받기
+		socket.on('getUserList', (arr) => {
+			this.setState({ 
+				currentUserList: arr 
+			})
+		})
+		
+		// 귓속말로 온 채팅 메시지 받기
+		socket.on('fromMessage', (obj) => {
+			const temp = this.state.allChats;
+			temp.push(obj);
+			
+			this.setState({
+				allChats: temp
+			})
+		})
+	}
+	
+	changeMessage = (e) => {
+		this.setState({
+			message: e.target.value
+		})
+	}
+	
+	submit = (e) => {
+		if (e.key == 'Enter') {
+			sendChat();
+		}
+	}
+	
+	changeToUser = (e) => {
+		if (this.state.userId === e.target.value) {
+			alert('자신한테 메시지 보낼 수 없음');
+			e.target.value = 'default';
+			return
+		}
+		
+		if (e.target.value !== 'default') {
+			const idx = e.target.value;
+			
+			this.setState({
+				isWhisper: true,
+				toUser: e.target.value,
+			})
+		} else {
+			this.setState({
+				isWhisper: false,
+				idx: 0
+			})
+		}
+	}
+	
 	
 	render() {
-		const allChats = this.state.logs.map((chat, idx) => {
+		const allChats = this.state.allChats.map((chat, idx) => {
 			<MessageBox 
-				user = {this.state.user}
+				userId = {this.state.userId}
 				message = {chat.message}
 				isWhisper = {chat.isWhisper}
 				toUser = {chat.toUser}
@@ -66,11 +130,34 @@ class Chat extends React.Component {
 			/>
 		});
 		
-		<div className = "Chat">
-			<div className = "chat-board">
-				{allChats}
+		
+		return (
+			<div>
+				<Header />
+				<div className = "Chat">
+					<div className = "chat-board">
+						{ allChats }
+					</div>
+					<div className = "chat-input">
+
+						<input 
+							type = "text"
+							className = "message-form"
+							placeholder = "전송할 메시지를 적으세요"
+							value = { this.state.message }
+							onChange = { this.changeMessage }
+							onKeyPress = { this.submit }
+						/>
+						<button
+							className = "submit-btn"
+							type = "button"
+							id = "button-add"
+							onClick = { this.sendChat }
+						>전송</button>
+					</div>
+				</div>
 			</div>
-		</div>
+		)
 		
 	}
 }

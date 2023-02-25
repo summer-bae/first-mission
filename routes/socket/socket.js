@@ -15,6 +15,7 @@ module.exports = (server) => {
 		const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 		
 		console.log('new connect : ', ip, socket.id);
+		console.log(connectUserList);
 		
 		// 소켓 연결 종료
 		socket.on('disconnect', () => {
@@ -29,6 +30,7 @@ module.exports = (server) => {
 			
 			io.emit("getUserList", connectUserList);
 			console.log('Client leave : ', ip, socket.id);
+			console.log(connectUserList);
 		});
 		
 		// 소켓 연결 에러
@@ -52,7 +54,7 @@ module.exports = (server) => {
 		socket.on('joinChat', (info) => {
 			userId = info.id;
 			info.socketId = socket.id;
-			connectUserList.push(info);
+			connectUserList.push(info.id);
 			socket.join(info.id);
 			io.emit("getUserList", connectUserList);
 		});

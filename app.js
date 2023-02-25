@@ -53,7 +53,9 @@ const initExpress = redisClient => {
 
 const initRedis = () => redis.createClient();
 const initMongo = async () => {
-	await mongoose.connect('mongodb://localhost:27017/app', { useNewUrlParser: true, useUnifiedTopology: true });
+	await mongoose.connect('mongodb://localhost:27017/app', { 
+		useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true
+	});
 };
 
 const main = () => {
