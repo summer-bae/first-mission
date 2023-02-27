@@ -28,31 +28,6 @@ export default class Chat extends Component {
 		};
 	}
 
-	useEffect = () => {
-		axios.get('/api/account/id').then(({ data }) => {
-			this.setState(
-				{
-					username: data,
-				},
-				() => {
-					console.log(this.state.username);
-					socket.emit('enter public room', this.state.username);
-					this.setState(
-						{
-							socket: this.props.socket,
-						},
-						() => {
-							// 전체 메시지, 유저리스트 가져오기
-							this.state.socket.emit('get public message', this.state.username);
-							this.state.socket.emit('get all users');
-						}
-					);
-					localStorage.removeItem('message');
-				}
-			);
-		});
-	};
-
 	componentDidMount() {
 		console.log('Chat');
 		console.log(this.state);

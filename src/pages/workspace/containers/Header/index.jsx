@@ -17,7 +17,7 @@ class Header extends React.Component {
 		super(props);
 		this.state = {
 			username: '',
-			socket: null,
+			socket: socket,
 			allUsers: null,
 			publicMessage: null,
 			allMessage: null,
@@ -32,7 +32,6 @@ class Header extends React.Component {
 				username: data,
 			});
 
-			console.log(socket, socket.id);
 
 			socket.emit('enter public room', data);
 			socket.on('success public room', () => {
@@ -41,8 +40,7 @@ class Header extends React.Component {
 
 			socket.on('success get users', (allUsers) => {
 				this.setState({
-					allUsers: allUsers,
-					socket: socket,
+					allUsers: allUsers
 				});
 			});
 
@@ -154,11 +152,10 @@ class Header extends React.Component {
 
 	signOut = () => {
 		window.location.href = '/api/account/signout';
-		console.log(this.state);
+
 	};
 
 	render() {
-		console.log(this.state);
 		const { username } = this.state;
 		return (
 			<>
