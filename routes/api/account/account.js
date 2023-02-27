@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const modAccount = require('../../../models/account');
+const modAccount = require('../../../models/account/account');
 const util = require('./util');
 const Error = require('../util/error');
 
