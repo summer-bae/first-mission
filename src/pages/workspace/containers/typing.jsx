@@ -8,7 +8,7 @@ export default class Typing extends Component {
 		this.state = {
 			socket: props.socket,
 			username: props.username,
-			activeUserList: props.activeUserList,
+			allUsers: props.allUsers,
 			message: '',
 		};
 	}
@@ -20,9 +20,9 @@ export default class Typing extends Component {
 			};
 		}
 
-		if (nextProps.activeUserList !== prevState.activeUserList) {
+		if (nextProps.allUsers !== prevState.allUsers) {
 			return {
-				activeUserList: nextProps.activeUserList,
+				allUsers: nextProps.allUsers,
 			};
 		}
 
@@ -46,7 +46,7 @@ export default class Typing extends Component {
 	massageSendHandler = () => {
 		if (this.state.message.length > 0) {
 			const from = this.props.username;
-			const to = this.state.activeUserList;
+			const to = document.getElementsByClassName('list-group-item active')[0].id;
 			const msg = this.state.message;
 
 			if (to === 'public') {
@@ -73,13 +73,13 @@ export default class Typing extends Component {
 	};
 
 	render() {
-		const activeUserList = this.state.activeUserList;
+		const allUsers = this.state.allUsers;
 		const message = this.state.message;
 
 		return (
 			<Col>
 				<InputGroup>
-					<InputGroupAddon addonType="prepend">{activeUserList}</InputGroupAddon>
+					<InputGroupAddon addonType="prepend">{allUsers}</InputGroupAddon>
 					<Input
 						placeholder="메시지를 입력하세요"
 						onChange={this.messageChangeHandler}

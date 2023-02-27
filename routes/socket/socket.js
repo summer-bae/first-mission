@@ -82,6 +82,8 @@ module.exports = (server) => {
 								message: msg,
 								createdAt: Date.now(),
 							});
+							
+							console.log('save', publicMessage);
 							publicMessage.save((err) => {
 								if (err) throw err;
 								else {

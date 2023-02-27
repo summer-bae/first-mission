@@ -25,17 +25,19 @@ export default class Chat extends Component {
 			allMessage: props.allMessage,
 			privateMessage: props.privateMessage,
 			message: props.message,
+			activeUserList: null,
 		};
 	}
 
 	componentDidMount() {
 		console.log('Chat');
 		console.log(this.state);
+		localStorage.removeItem('message');
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		this.lastLineFocus();
-		console.log("chat update!");
+		// this.lastLineFocus();
+		console.log('chat update!');
 		console.log(this.state);
 	}
 
@@ -71,13 +73,13 @@ export default class Chat extends Component {
 		if (nextProps.publicMessage && prevState.activeUserList === 'public') {
 			nextProps.receivePublicMessageHandler(null);
 			return {
-				publicAllMsg: [...prevState.publicAllMsg, nextProps.publicMessage],
+				publicMessage: [...prevState.publicMessage, nextProps.publicMessage],
 			};
 		} else if (nextProps.publicAllmessage && prevState.activeUserList === 'public') {
 			// 전체 메시지 props전달받았을때
 			nextProps.getPublicMessageHandler(null);
 			return {
-				publicAllMsg: nextProps.publicAllmessage,
+				publicMessage: nextProps.publicAllmessage,
 			};
 		}
 
@@ -90,13 +92,13 @@ export default class Chat extends Component {
 			// 귓속말 전달
 			nextProps.receiveprivateMessageHandler(null);
 			return {
-				publicAllMsg: [...prevState.publicAllMsg, nextProps.privateReceivedInfo],
+				publicMessage: [...prevState.publicMessage, nextProps.privateReceivedInfo],
 			};
 		} else if (nextProps.privateMessage && prevState.activeUserList !== 'public') {
 			// 귓속말 모든 데이터
 			nextProps.getPrivateMessageHandler(null);
 			return {
-				publicAllMsg: nextProps.privateMessage,
+				publicMessage: nextProps.privateMessage,
 			};
 		}
 
@@ -110,7 +112,7 @@ export default class Chat extends Component {
 	};
 
 	render() {
-		const publicAllMsg = this.state.publicAllMsg;
+		const publicMessage = this.state.allMessage;
 		const allUsers = this.state.allUsers;
 		const username = this.state.username;
 		const socket = this.state.socket;
@@ -130,7 +132,7 @@ export default class Chat extends Component {
 
 					<Col md="8" sm="8" xs="12" id="chat_list_wrapper">
 						<Row>
-							<ChatList publicAllMsg={publicAllMsg} username={username} />
+							<ChatList publicMessage={publicMessage} username={username} />
 						</Row>
 						<Row>
 							<Typing
