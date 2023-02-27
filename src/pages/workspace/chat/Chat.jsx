@@ -13,26 +13,28 @@ const socket = io.connect('', {
 	transports: ['websocket'],
 });
 
-
 export default class Chat extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			socket: '',
-			username: '',
-			activeUserList: 'public',
-			publicAllMsg: [],
+			socket: props.socket,
+			username: props.username,
+			allUsers: props.allUsers,
+			publicMessage: props.publicMessage,
+			allMessage: props.allMessage,
+			privateMessage: props.privateMessage,
+			message: props.message,
 		};
 	}
 
 	useEffect = () => {
-		axios
-			.get('/api/account/id')
-			.then(({ data }) => {
-				this.setState({
+		axios.get('/api/account/id').then(({ data }) => {
+			this.setState(
+				{
 					username: data,
-				}, () => {
+				},
+				() => {
 					console.log(this.state.username);
 					socket.emit('enter public room', this.state.username);
 					this.setState(
@@ -46,12 +48,20 @@ export default class Chat extends Component {
 						}
 					);
 					localStorage.removeItem('message');
-				});
+				}
+			);
 		});
 	};
 
+	componentDidMount() {
+		console.log('Chat');
+		console.log(this.state);
+	}
+
 	componentDidUpdate(prevProps, prevState) {
 		this.lastLineFocus();
+		console.log("chat update!");
+		console.log(this.state);
 	}
 
 	// 마지막 메시지 스크롤 포커스

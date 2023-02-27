@@ -5,6 +5,8 @@ import axios from 'axios';
 import style from './style.scss';
 import io from 'socket.io-client';
 
+import Chat from '../../chat/Chat';
+
 const socket = io.connect('', {
 	path: '/socket.io',
 	transports: ['websocket'],
@@ -68,6 +70,50 @@ class Header extends React.Component {
 		});
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		console.log('update!');
+		const {
+			allUsers: prevAllUsers,
+			username: prevUsername,
+			socket: prevSocket,
+			publicMessage: prevPublicMessage,
+			allMessage: prevAllMessage,
+			privateMessage: prevPrivateMessage,
+			message: prevMessage,
+		} = prevProps;
+		const {
+			allUsers,
+			username,
+			socket,
+			publicMessage,
+			allMessage,
+			privateMessage,
+			message,
+		} = this.props;
+
+		if (prevAllUsers !== allUsers) {
+			this.setState({ allUsers: allUsers });
+		}
+		if (prevUsername !== username) {
+			this.setState({ username: username });
+		}
+		if (prevSocket !== socket) {
+			this.setState({ socket: socket });
+		}
+		if (prevPublicMessage !== publicMessage) {
+			this.setState({ publicMessage: publicMessage });
+		}
+		if (prevAllMessage !== allMessage) {
+			this.setState({ allMessage: allMessage });
+		}
+		if (prevPrivateMessage !== privateMessage) {
+			this.setState({ privateMessage: privateMessage });
+		}
+		if (prevMessage !== message) {
+			this.setState({ message: message });
+		}
+	}
+
 	authenticatedHandler(username) {
 		const socket = socketIOClient('https://mission-ink-czzqf.run.goorm.site/socket.io');
 
@@ -115,16 +161,27 @@ class Header extends React.Component {
 		console.log(this.state);
 		const { username } = this.state;
 		return (
-			<div className={style.Header}>
-				<UncontrolledDropdown>
-					<DropdownToggle caret tag="a" className={style.Header__dropdown}>
-						{username}
-					</DropdownToggle>
-					<DropdownMenu right>
-						<DropdownItem onClick={this.signOut}>로그아웃</DropdownItem>
-					</DropdownMenu>
-				</UncontrolledDropdown>
-			</div>
+			<>
+				<div className={style.Header}>
+					<UncontrolledDropdown>
+						<DropdownToggle caret tag="a" className={style.Header__dropdown}>
+							{username}
+						</DropdownToggle>
+						<DropdownMenu right>
+							<DropdownItem onClick={this.signOut}>로그아웃</DropdownItem>
+						</DropdownMenu>
+					</UncontrolledDropdown>
+				</div>
+				<Chat
+					socket={this.state.socket}
+					username={this.state.username}
+					allUsers={this.state.allUsers}
+					publicMessage={this.state.publicMessage}
+					allMessage={this.state.allMessage}
+					privateMessage={this.state.privateMessage}
+					message={this.state.message}
+				/>
+			</>
 		);
 	}
 }
