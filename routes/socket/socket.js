@@ -82,13 +82,14 @@ module.exports = (server) => {
 								message: msg,
 								createdAt: Date.now(),
 							});
-							
+
 							console.log('save', publicMessage);
 							publicMessage.save((err) => {
 								if (err) throw err;
 								else {
 									// 채팅 내용이 저장 됐다면
 									io.emit('public message', publicMessage);
+									io.emit('get public message', username);
 								}
 							});
 						}
@@ -100,6 +101,7 @@ module.exports = (server) => {
 		//모든 전체 채팅 내용
 		socket.on('get public message', (username) => {
 			// 요청한 사용자의 socket id검색
+
 			PublicRoom.findOne({ username: username }, (err, user) => {
 				if (err) throw err;
 				else {
@@ -108,7 +110,7 @@ module.exports = (server) => {
 						.exec((err, messages) => {
 							if (err) throw err;
 							// 요청한 클라이언트에게 전달 채팅 내역 전달
-							io.to(user.socketId).emit('public all message', messages);
+							io.to(socket.id).emit('public all message', messages);
 						});
 				}
 			});

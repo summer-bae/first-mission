@@ -32,7 +32,6 @@ class Header extends React.Component {
 				username: data,
 			});
 
-
 			socket.emit('enter public room', data);
 			socket.on('success public room', () => {
 				socket.emit('get all users');
@@ -40,7 +39,7 @@ class Header extends React.Component {
 
 			socket.on('success get users', (allUsers) => {
 				this.setState({
-					allUsers: allUsers
+					allUsers: allUsers,
 				});
 			});
 
@@ -51,6 +50,7 @@ class Header extends React.Component {
 			});
 
 			socket.on('public all message', (allMessage) => {
+				console.log('!!public all message', allMessage);
 				this.setState({
 					allMessage: allMessage,
 				});
@@ -152,7 +152,18 @@ class Header extends React.Component {
 
 	signOut = () => {
 		window.location.href = '/api/account/signout';
+	};
 
+	receivePublicMessageHandler = (publicMessage) => {
+		this.setState({
+			publicMessage: publicMessage,
+		});
+	};
+
+	receiveprivateMessageHandler = (privateMessage) => {
+		this.setState({
+			privateMessage: privateMessage,
+		});
 	};
 
 	render() {
@@ -177,6 +188,8 @@ class Header extends React.Component {
 					allMessage={this.state.allMessage}
 					privateMessage={this.state.privateMessage}
 					message={this.state.message}
+					receivePublicMessageHandler={this.receivePublicMessageHandler}
+					receiveprivateMessageHandler={this.receiveprivateMessageHandler}
 				/>
 			</>
 		);

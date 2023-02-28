@@ -52,6 +52,7 @@ export default class Typing extends Component {
 			if (to === 'public') {
 				// 전체 채팅 전송
 				this.state.socket.emit('public send message', from, msg);
+	
 			} else {
 				// 귓속말 전송
 				this.state.socket.emit('private send message', from, to, msg);

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Header from './containers/Header';
+import File from './containers/file/File';
 
 const Workspace = () => (
 	<div>
@@ -10,6 +11,8 @@ const Workspace = () => (
 			<div>file</div>
 			<div>chat</div>
 		</div>
+
+		<File />
 	</div>
 );
 

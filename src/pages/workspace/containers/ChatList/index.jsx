@@ -5,16 +5,17 @@ export default class ChatList extends Component {
 		super(props);
 
 		this.state = {
-			publicAllMsg: props.publicAllMsg,
+			allMessage: props.allMessage,
 			username: props.username,
 		};
 	}
+	
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		// 메시지 변경되었을떄
-		if (nextProps.publicAllMsg !== prevState.publicAllMsg) {
+		if (nextProps.allMessage !== prevState.allMessage) {
 			return {
-				publicAllMsg: nextProps.publicAllMsg,
+				allMessage: nextProps.allMessage,
 			};
 		}
 
@@ -23,6 +24,7 @@ export default class ChatList extends Component {
 				username: nextProps.username,
 			};
 		}
+		console.log(nextProps.allMessage);
 
 		return null;
 	}
@@ -66,7 +68,8 @@ export default class ChatList extends Component {
 	};
 
 	render() {
-		const publicAllMsg = this.state.publicAllMsg;
-		return <div id="chat_ul">{publicAllMsg ? this.makePublicChatList(publicAllMsg) : ''}</div>;
+		const allMessage = this.state.allMessage;
+		console.log(allMessage);
+		return <div id="chat_ul">{allMessage ? this.makePublicChatList(allMessage) : ''}</div>;
 	}
 }
