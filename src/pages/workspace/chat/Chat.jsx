@@ -30,15 +30,19 @@ export default class Chat extends Component {
 	}
 
 	componentDidMount() {
-		console.log('Chat');
-		console.log(this.state);
-		localStorage.removeItem('message');
+		socket.on('public message', (obj) => {
+			const temp = this.state.allMessage;
+			temp.push(obj);
+			
+			this.setState({
+				allMessage: temp
+			})
+		})
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		// this.lastLineFocus();
+		this.lastLineFocus();
 		console.log('chat update!');
-		console.log(this.state.publicMessage);
 		console.log(this.state);
 	}
 

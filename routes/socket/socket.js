@@ -32,7 +32,6 @@ module.exports = (server) => {
 							publicRoom.save((err) => {
 								if (err) throw err;
 								// 참여자로 저장이 됐다면
-								console.log('success public room');
 								io.emit('success public room');
 							});
 						} else {
@@ -50,7 +49,7 @@ module.exports = (server) => {
 			});
 		});
 
-		// 클라이언트 리스트와 유저정보 비교
+		// 전체 유저 리스트
 		getClientList = () => {
 			PublicRoom.find({}).exec((err, user) => {
 				if (err) throw err;
@@ -83,13 +82,12 @@ module.exports = (server) => {
 								createdAt: Date.now(),
 							});
 
-							console.log('save', publicMessage);
 							publicMessage.save((err) => {
 								if (err) throw err;
 								else {
+									console.log("public send message!");
 									// 채팅 내용이 저장 됐다면
 									io.emit('public message', publicMessage);
-									io.emit('get public message', username);
 								}
 							});
 						}
@@ -100,8 +98,8 @@ module.exports = (server) => {
 
 		//모든 전체 채팅 내용
 		socket.on('get public message', (username) => {
+			console.log("!!");
 			// 요청한 사용자의 socket id검색
-
 			PublicRoom.findOne({ username: username }, (err, user) => {
 				if (err) throw err;
 				else {
@@ -146,7 +144,7 @@ module.exports = (server) => {
 									.exec((err, toSocketId) => {
 										if (err) throw err;
 										else {
-											io.to(toSocketId.socketId).emit(
+											socket.to(toSocketId.socketId).emit(
 												'private message',
 												privateMessage
 											);
@@ -183,7 +181,7 @@ module.exports = (server) => {
 							if (a.createdAt == b.createdAt) {
 								return 0;
 							}
-							return a.createdAt < b.createdAt ? -1 : 1;
+							return a.createdAt <= b.createdAt ? -1 : 1;
 						};
 						message.sort(dateSort);
 						io.to(socket.id).emit('private get message', message);
@@ -198,15 +196,6 @@ module.exports = (server) => {
 		socket.on('disconnect', () => {
 			getClientList();
 			console.log('disconnect!!');
-			// User.findOne({ id: username }, (err, user) => {
-			// 	if (err) throw err;
-			// 	if (!username) {
-			// 		console.log('존재하는 유저가 아닙니다.');
-			// 	} else {
-			// 		PublicRoom.findOne({ username: username }, (err, participant) => {
-			// 			if (err) throw err;
-			// 			participant.remove({ username : username });
-			// 	}
 		});
 	});
 };

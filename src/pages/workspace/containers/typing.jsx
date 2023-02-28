@@ -12,6 +12,7 @@ export default class Typing extends Component {
 			message: '',
 		};
 	}
+	
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (nextProps.socket !== prevState.socket) {
@@ -31,6 +32,8 @@ export default class Typing extends Component {
 				username: nextProps.username,
 			};
 		}
+		
+		
 
 		return null;
 	}
