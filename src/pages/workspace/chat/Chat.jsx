@@ -38,12 +38,20 @@ export default class Chat extends Component {
 				allMessage: temp
 			})
 		})
+		
+		socket.on('private message', (obj) => {
+			const temp = this.state.message;
+			temp.push(obj);
+			
+			this.setState({
+				message: temp
+			})
+		})
+		
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		this.lastLineFocus();
-		console.log('chat update!');
-		console.log(this.state);
 	}
 
 	// 마지막 메시지 스크롤 포커스
@@ -62,31 +70,11 @@ export default class Chat extends Component {
 			};
 		}
 
-		if (nextProps.isloggined !== prevState.isloggined) {
-			return {
-				isloggined: nextProps.isloggined,
-			};
-		}
-
 		if (nextProps.username !== prevState.username) {
 			return {
 				username: nextProps.username,
 			};
 		}
-
-		// // 현재 active된것이 전체 채팅
-		// if (nextProps.publicMessage && prevState.activeUserList === 'public') {
-		// 	nextProps.receivePublicMessageHandler(null);
-		// 	return {
-		// 		publicMessage: [...prevState.publicMessage, nextProps.publicMessage],
-		// 	};
-		// } else if (nextProps.publicAllmessage && prevState.activeUserList === 'public') {
-		// 	// 전체 메시지 props전달받았을때
-		// 	nextProps.getPublicMessageHandler(null);
-		// 	return {
-		// 		publicMessage: nextProps.publicAllmessage,
-		// 	};
-		// }
 		
 		if (nextProps.publicMessage !== prevState.publicMessage) {
 			return {
@@ -99,30 +87,24 @@ export default class Chat extends Component {
 				allMessage: nextProps.allMessage,
 			}
 		}
+		
+		if (nextProps.privateMessage !== prevState.privateMessage) {
+			return {
+				privateMessage: nextProps.privateMessage,
+			}
+		}
+		
+		if (nextProps.message !== prevState.message) {
+			return {
+				message: nextProps.message,
+			}
+		}
 
-		// if (
-		// 	nextProps.privateReceivedInfo &&
-		// 	prevState.activeUserList !== 'public' &&
-		// 	(nextProps.privateReceivedInfo.username === prevState.activeUserList ||
-		// 		nextProps.privateReceivedInfo.username === prevState.username)
-		// ) {
-		// 	// 귓속말 전달
-		// 	nextProps.receiveprivateMessageHandler(null);
-		// 	return {
-		// 		publicMessage: [...prevState.publicMessage, nextProps.privateReceivedInfo],
-		// 	};
-		// } else if (nextProps.privateMessage && prevState.activeUserList !== 'public') {
-		// 	// 귓속말 모든 데이터
-		// 	nextProps.getPrivateMessageHandler(null);
-		// 	return {
-		// 		publicMessage: nextProps.privateMessage,
-		// 	};
-		// }
 
 		return null;
 	}
 
-	receiveActiveUser = (activeUser) => {
+	receiveActiveUser = activeUser => {
 		this.setState({
 			activeUserList: activeUser,
 		});
@@ -131,6 +113,7 @@ export default class Chat extends Component {
 	render() {
 		
 		const allMessage = this.state.allMessage;
+		const message = this.state.message;
 		const allUsers = this.state.allUsers;
 		const username = this.state.username;
 		const socket = this.state.socket;
@@ -150,7 +133,7 @@ export default class Chat extends Component {
 
 					<Col md="8" sm="8" xs="12" id="chat_list_wrapper">
 						<Row>
-							<ChatList allMessage={allMessage} username={username} />
+							<ChatList allMessage={allMessage} username={username} message={message} type={activeUserList}/>
 						</Row>
 						<Row>
 							<Typing

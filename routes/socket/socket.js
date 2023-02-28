@@ -98,7 +98,6 @@ module.exports = (server) => {
 
 		//모든 전체 채팅 내용
 		socket.on('get public message', (username) => {
-			console.log("!!");
 			// 요청한 사용자의 socket id검색
 			PublicRoom.findOne({ username: username }, (err, user) => {
 				if (err) throw err;
@@ -137,24 +136,12 @@ module.exports = (server) => {
 							if (err) throw err;
 							else {
 								// 저장이 완료되면 귓속말 보내기
-								io.to(socket.id).emit('private message', privateMessage);
-
-								PublicRoom.findOne({ username: to })
-									.select('socketId')
-									.exec((err, toSocketId) => {
-										if (err) throw err;
-										else {
-											socket.to(toSocketId.socketId).emit(
-												'private message',
-												privateMessage
-											);
-										}
-									});
+								io.emit('private message', privateMessage);
 							}
 						});
 					} else {
 						//둘 중 한 명이라도 존재 하지 않는다면
-						console.log('존재 하지 않는 유저입니다.');
+						console.log('존재하지 않는 유저입니다.');
 					}
 				})
 				.catch((err) => {
@@ -175,6 +162,7 @@ module.exports = (server) => {
 						PrivateMessage.find({ sender: fromUser._id, receiver: toUser._id }),
 						PrivateMessage.find({ sender: toUser._id, receiver: fromUser._id }),
 					]).then((messages) => {
+						
 						const [fromMsg, toMsg] = messages;
 						const message = [...fromMsg, ...toMsg];
 						const dateSort = (a, b) => {
@@ -195,7 +183,6 @@ module.exports = (server) => {
 		// 연결 끊겼을때
 		socket.on('disconnect', () => {
 			getClientList();
-			console.log('disconnect!!');
 		});
 	});
 };

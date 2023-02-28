@@ -43,21 +43,10 @@ class Header extends React.Component {
 				});
 			});
 
-			socket.on('public message', (publicMessage) => {
-				this.setState({
-					publicMessage: publicMessage,
-				});
-			});
-
 			socket.on('public all message', (allMessage) => {
-				console.log('!!public all message', allMessage);
 				this.setState({
 					allMessage: allMessage,
 				});
-			});
-
-			socket.on('private message', (privateMessage) => {
-				this.setState({ privateMessage: privateMessage });
 			});
 
 			socket.on('private get message', (message) => {
@@ -69,7 +58,6 @@ class Header extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		console.log('update!');
 		const {
 			allUsers: prevAllUsers,
 			username: prevUsername,
@@ -112,58 +100,8 @@ class Header extends React.Component {
 		}
 	}
 
-	authenticatedHandler(username) {
-		const socket = socketIOClient('https://mission-ink-czzqf.run.goorm.site/socket.io');
-
-		socket.emit('enter public room', username);
-		socket.on('success public room', () => {
-			socket.emit('get all users');
-		});
-
-		socket.on('success get users', (allUsers) => {
-			this.setState({
-				allUsers: allUsers,
-				socket: socket,
-			});
-		});
-
-		socket.on('public message', (publicMessage) => {
-			this.setState({
-				publicMessage: publicMessage,
-			});
-		});
-
-		socket.on('public all message', (allMessage) => {
-			this.setState({
-				allMessage: allMessage,
-			});
-		});
-
-		socket.on('private message', (privateMessage) => {
-			this.setState({ privateMessage: privateMessage });
-		});
-
-		socket.on('private get message', (message) => {
-			this.setState({
-				message: message,
-			});
-		});
-	}
-
 	signOut = () => {
 		window.location.href = '/api/account/signout';
-	};
-
-	receivePublicMessageHandler = (publicMessage) => {
-		this.setState({
-			publicMessage: publicMessage,
-		});
-	};
-
-	receiveprivateMessageHandler = (privateMessage) => {
-		this.setState({
-			privateMessage: privateMessage,
-		});
 	};
 
 	render() {
@@ -188,8 +126,6 @@ class Header extends React.Component {
 					allMessage={this.state.allMessage}
 					privateMessage={this.state.privateMessage}
 					message={this.state.message}
-					receivePublicMessageHandler={this.receivePublicMessageHandler}
-					receiveprivateMessageHandler={this.receiveprivateMessageHandler}
 				/>
 			</>
 		);

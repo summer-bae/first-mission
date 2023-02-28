@@ -7,6 +7,8 @@ export default class ChatList extends Component {
 		this.state = {
 			allMessage: props.allMessage,
 			username: props.username,
+			message: props.message,
+			type: props.type
 		};
 	}
 	
@@ -18,13 +20,25 @@ export default class ChatList extends Component {
 				allMessage: nextProps.allMessage,
 			};
 		}
+		
+		// 메시지 변경되었을떄
+		if (nextProps.message !== prevState.message) {
+			return {
+				message: nextProps.message,
+			};
+		}
 
 		if (nextProps.username !== prevState.username) {
 			return {
 				username: nextProps.username,
 			};
 		}
-		console.log(nextProps.allMessage);
+		
+		if (nextProps.type !== prevState.type) {
+			return {
+				type: nextProps.type,
+			};
+		}
 
 		return null;
 	}
@@ -38,7 +52,7 @@ export default class ChatList extends Component {
 	};
 
 	distinctMsg = (item) => {
-		// _id username, message, sender, createdDate
+
 		const { _id, username, message, createdDate } = item;
 		// username = 송신자 , this.state.username = 현재 나의 계정
 		if (username !== this.state.username) {
@@ -68,8 +82,13 @@ export default class ChatList extends Component {
 	};
 
 	render() {
-		const allMessage = this.state.allMessage;
-		console.log(allMessage);
-		return <div id="chat_ul">{allMessage ? this.makePublicChatList(allMessage) : ''}</div>;
+		
+		if (this.state.type === 'public') {
+			const allMessage = this.state.allMessage;
+			return <div id="chat_ul">{allMessage ? this.makePublicChatList(allMessage) : ''}</div>;
+		} else {
+			const allMessage = this.state.message;
+			return <div id="chat_ul">{allMessage ? this.makePublicChatList(allMessage) : ''}</div>;
+		}
 	}
 }

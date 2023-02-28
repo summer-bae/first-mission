@@ -8,7 +8,6 @@ export default class UserList extends Component {
 			allUsers: props.allUsers,
 			username: props.username,
 			socket: props.socket,
-			receiveActiveUser: props.receiveActiveUser,
 		};
 	}
 
@@ -37,10 +36,6 @@ export default class UserList extends Component {
 	componentDidMount() {
 		this.state.socket.emit('get public message', this.props.username);
 	}
-	
-	componentDidUpdate() {
-		console.log(this.state);
-	}
 
 	// 유리 리스트 클릭이벤트
 	userListClickHandler = (e) => {
@@ -64,8 +59,7 @@ export default class UserList extends Component {
 							this.state.socket.emit('get public message', from);
 						} else {
 							// from 과 to의 채팅 가져오기
-							console.log(this.state.socket.emit('get private message', from, to));
-							console.log("!!");
+							this.state.socket.emit('get private message', from, to);
 						}
 					}
 				);
