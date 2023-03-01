@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 const JSZip = require('jszip');
 
+
 export default class File extends React.Component {
 	constructor(props) {
 		super(props);
@@ -33,19 +34,23 @@ export default class File extends React.Component {
 		const file = this.state.uploadFile;
 		const reader = new FileReader();
 
-		reader.onload = (e) => {
-			JSZip.loadAsync(e.target.result).then((obj) => {
-				this.setState({
-					fileList: Object.values(obj.files),
+		if (file.name.substr(file.name.length - 3) === 'zip') {
+			reader.onload = (e) => {
+				JSZip.loadAsync(e.target.result).then((obj) => {
+					this.setState({
+						fileList: Object.values(obj.files),
+					});
 				});
-			});
-		};
+			};
 
-		reader.onerror = (e) => {
-			alert('file open error');
-		};
+			reader.onerror = (e) => {
+				alert('file open error');
+			};
 
-		reader.readAsArrayBuffer(file);
+			reader.readAsArrayBuffer(file);
+		} else {
+
+		}
 	};
 
 	handlerFileSubmit = (e) => {
@@ -116,7 +121,6 @@ export default class File extends React.Component {
 		}
 
 		const fileList = this.state.fileList.map((item, idx) => {
-			console.log(item);
 			return (
 				<li
 					className="file_select"

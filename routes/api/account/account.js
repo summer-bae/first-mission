@@ -6,6 +6,7 @@ const multer = require('multer');
 const AdmZip = require('adm-zip');
 const fs = require('fs');
 const rimraf = require('rimraf');
+const tar = require('tar-fs');
 
 const upload = require('../../../src/upload');
 
@@ -102,13 +103,27 @@ router.post('/file/upload', async (req, res, next) => {
 			}
 
 			const filePath = req.file.path;
-			const zip = new AdmZip(filePath);
-			const target = '../upload/' + req.session.user.id;
+			console.log(filePath.split('.')[1]);
+			if (filePath.split('.')[1] === 'zip') {
+				const zip = new AdmZip(filePath);
+				const target = '../upload/' + req.session.user.id;
+				
+				rimraf.sync(target);
+				zip.extractAllTo(target, true);
 
-			rimraf.sync(target);
-			zip.extractAllTo(target, true);
+				return res.json(true);
+			} else {
+				const target = '../upload/' + req.session.user.id;
+				rimraf.sync(target);
+				const t = fs.createReadStream(filePath).pipe(
+					tar.extract(target, {
+						readable: true, // all dirs and files should be readable
+						writable: true, // all dirs and files should be writable
+					})
+				);
 
-			return res.json(true);
+				return res.json(true);
+			}
 		});
 	} catch (err) {
 		console.log(err);
@@ -123,7 +138,6 @@ router.get('/file/contents', async (req, res, next) => {
 			'utf8'
 		);
 		res.send(contents);
-		console.log(contents);
 	} catch (err) {
 		console.log(err);
 	}
