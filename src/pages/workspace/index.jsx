@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Header from './containers/Header';
-import File from './containers/file/File';
+import File from './containers/File/File';
 
 const Workspace = () => (
 	<div>

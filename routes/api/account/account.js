@@ -8,7 +8,7 @@ const fs = require('fs');
 const rimraf = require('rimraf');
 const tar = require('tar-fs');
 
-const upload = require('../../../src/upload');
+const upload = require('./upload');
 
 const findById = async (id) => {
 	const accountInfo = await modAccount.findOne({ id });
@@ -103,7 +103,6 @@ router.post('/file/upload', async (req, res, next) => {
 			}
 
 			const filePath = req.file.path;
-			console.log(filePath.split('.')[1]);
 			if (filePath.split('.')[1] === 'zip') {
 				const zip = new AdmZip(filePath);
 				const target = '../upload/' + req.session.user.id;
@@ -132,7 +131,6 @@ router.post('/file/upload', async (req, res, next) => {
 
 router.get('/file/contents', async (req, res, next) => {
 	try {
-		console.log(req.query.filename);
 		const contents = fs.readFileSync(
 			'../upload/' + req.session.user.id + '/' + req.query.filename,
 			'utf8'

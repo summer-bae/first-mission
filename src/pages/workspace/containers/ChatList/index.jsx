@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import style from './chatlist.css';
 
 export default class ChatList extends Component {
 	constructor(props) {
@@ -8,10 +9,9 @@ export default class ChatList extends Component {
 			allMessage: props.allMessage,
 			username: props.username,
 			message: props.message,
-			type: props.type
+			type: props.type,
 		};
 	}
-	
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		// 메시지 변경되었을떄
@@ -20,7 +20,7 @@ export default class ChatList extends Component {
 				allMessage: nextProps.allMessage,
 			};
 		}
-		
+
 		// 메시지 변경되었을떄
 		if (nextProps.message !== prevState.message) {
 			return {
@@ -33,7 +33,7 @@ export default class ChatList extends Component {
 				username: nextProps.username,
 			};
 		}
-		
+
 		if (nextProps.type !== prevState.type) {
 			return {
 				type: nextProps.type,
@@ -52,29 +52,30 @@ export default class ChatList extends Component {
 	};
 
 	distinctMsg = (item) => {
+		const { _id, username, message, createdAt } = item;
 
-		const { _id, username, message, createdDate } = item;
-		// username = 송신자 , this.state.username = 현재 나의 계정
 		if (username !== this.state.username) {
-			// 내가 보낸것이 아니라면
+			// 내가 보낸 것이 아니라면
 			return (
 				<div className="incoming_msg chat_content" key={_id}>
-					<div className="received_msg">
-						<div className="received_withd_msg">
+					<div className={style.received_msg}>
+						<div className={style.received_withd_msg}>
 							<strong>{username}</strong>
 							<p>{message}</p>
-							<span className="tiem_date">{createdDate}</span>
+							<span style={{ color: '#cccccc', fontSize: 'x-small' }}>
+								{createdAt}
+							</span>
 						</div>
 					</div>
 				</div>
 			);
 		} else {
-			// 내가 보낸것이라면
+			// 내가 보낸 것이라면
 			return (
 				<div className="outgoing_msg chat_content" key={_id}>
-					<div className="sent_msg">
+					<div className={style.sent_msg}>
 						<p>{message}</p>
-						<span className="tiem_date">{createdDate}</span>
+						<span style={{ color: '#cccccc', fontSize: 'x-small' }}>{createdAt}</span>
 					</div>
 				</div>
 			);
@@ -82,13 +83,20 @@ export default class ChatList extends Component {
 	};
 
 	render() {
-		
 		if (this.state.type === 'public') {
 			const allMessage = this.state.allMessage;
-			return <div id="chat_ul">{allMessage ? this.makePublicChatList(allMessage) : ''}</div>;
+			return (
+				<div id={style.chat_ul}>
+					{allMessage ? this.makePublicChatList(allMessage) : ''}
+				</div>
+			);
 		} else {
 			const allMessage = this.state.message;
-			return <div id="chat_ul">{allMessage ? this.makePublicChatList(allMessage) : ''}</div>;
+			return (
+				<div id={style.chat_ul}>
+					{allMessage ? this.makePublicChatList(allMessage) : ''}
+				</div>
+			);
 		}
 	}
 }

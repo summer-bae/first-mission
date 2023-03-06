@@ -1,0 +1,35 @@
+.file_wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.file_list {
+	text-align: center;
+}
+
+.file_upload {
+	text-align: center;
+}
+
+.file_textEdit {
+	text-align: center;
+}
+
+.select {
+	color: red;
+	cursor: pointer;
+}
+
+.noselect {
+	color: black;
+	cursor: pointer;
+}
+
+#w {
+	width: 500px;
+}
+
+textarea {
+	margin-right: 10px;
+}

@@ -14,8 +14,7 @@ const publicRoomSchema = new mongoose.Schema({
     ref: 'account'
   },
   createdAt: {
-    type: Date,
-    default: Date.now
+    type: String,
   }
 });
 

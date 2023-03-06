@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-const JSZip = require('jszip');
 
+import style from './file.css';
+
+const JSZip = require('jszip');
 
 export default class File extends React.Component {
 	constructor(props) {
@@ -49,7 +51,6 @@ export default class File extends React.Component {
 
 			reader.readAsArrayBuffer(file);
 		} else {
-
 		}
 	};
 
@@ -73,13 +74,12 @@ export default class File extends React.Component {
 		this.setState({
 			selectFile: value,
 		});
-		console.log(value);
+
 		axios
 			.get('api/file/contents', {
 				params: { filename: value },
 			})
 			.then(({ data }) => {
-				console.log(data);
 				this.setState({
 					contents: data,
 				});
@@ -121,38 +121,58 @@ export default class File extends React.Component {
 		}
 
 		const fileList = this.state.fileList.map((item, idx) => {
-			return (
-				<li
-					className="file_select"
-					onClick={
-						item.dir
-							? this.handlerDirClick
-							: this.handlerFileClick.bind(this, item.name)
-					}
-				>
-					{item.name}
-				</li>
-			);
+			if (this.state.selectFile === item.name) {
+				return (
+					<li
+						className={style.select}
+						onClick={
+							item.dir
+								? this.handlerDirClick
+								: this.handlerFileClick.bind(this, item.name)
+						}
+					>
+						{item.name}
+					</li>
+				);
+			} else {
+				return (
+					<li
+						className={style.noselect}
+						onClick={
+							item.dir
+								? this.handlerDirClick
+								: this.handlerFileClick.bind(this, item.name)
+						}
+					>
+						{item.name}
+					</li>
+				);
+			}
 		});
 
 		return (
-			<div className="file">
-				<div className="file_upload">
-					<input type="file" name="file" onChange={this.handlerFileUpload} />
+			<div className={style.file_wrapper}>
+				<div className={style.file_upload}>
+					<input type="file" name="file" id={style.w} onChange={this.handlerFileUpload} />
 					<button
 						type="button"
-						className="btn btn-success"
+						className="btn btn-link"
 						onClick={this.handlerFileSubmit}
 					>
 						업로드
 					</button>
 				</div>
-				<div className="file_list">
+				<div className={style.file_list}>
 					<ul>{fileList ? fileList : '업로드를 해주세요'}</ul>
 				</div>
-				<div className="file_textEdit">
-					<textarea value={this.state.contents} onChange={this.handlerChangeContents} />
-					<button className="btn btn-success-save" onClick={this.handlerSaveContents}>
+				<div className={style.file_textEdit}>
+					<textarea
+						rows="10"
+						cols="60"
+						value={this.state.contents}
+						onChange={this.handlerChangeContents}
+					/>
+					<button className="btn btn-primary" onClick={this.handlerSaveContents}>
 						저장
 					</button>
 				</div>

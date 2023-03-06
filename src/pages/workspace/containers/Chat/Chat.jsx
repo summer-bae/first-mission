@@ -1,12 +1,13 @@
 import React, { Component, useEffect } from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import Typing from '../containers/typing';
+import Typing from '../Typing';
 import { Redirect } from 'react-router-dom';
 import io from 'socket.io-client';
-import Header from '../containers/Header';
-import UserList from '../containers/UserList';
-import ChatList from '../containers/ChatList';
+import Header from '../Header';
+import UserList from '../UserList';
+import ChatList from '../ChatList';
 import axios from 'axios';
+import style from './chat.css';
 
 const socket = io.connect('', {
 	path: '/socket.io',
@@ -37,6 +38,8 @@ export default class Chat extends Component {
 			this.setState({
 				allMessage: temp
 			})
+			
+			this.lastLineFocus();
 		})
 		
 		socket.on('private message', (obj) => {
@@ -46,17 +49,39 @@ export default class Chat extends Component {
 			this.setState({
 				message: temp
 			})
+			
+			this.lastLineFocus();
 		})
+		
+		this.lastLineFocus();
 		
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		this.lastLineFocus();
+		const {
+			allMessage: prevAllMessage,
+			message: prevMessage,
+		} = prevProps;
+		const {
+			allMessage,
+			message,
+		} = this.props;
+		
+		if (prevAllMessage !== allMessage) {
+			this.lastLineFocus();
+		}
+
+		if (prevMessage !== message) {
+			this.lastLineFocus();
+		}
+		
 	}
 
 	// 마지막 메시지 스크롤 포커스
 	lastLineFocus = () => {
 		const lists = document.getElementsByClassName('chat_content');
+		console.log(lists.length);
 		if (lists.length > 0) {
 			lists[lists.length - 1].scrollIntoView();
 		}
@@ -121,7 +146,7 @@ export default class Chat extends Component {
 
 		return (
 			<Container>
-				<Row id="chat_wrapper">
+				<Row id={style.chat_wrapper}>
 					<Col md="4" sm="4" xs="12" id="user_list_wrapper">
 						<UserList
 							allUsers={allUsers}
@@ -131,7 +156,7 @@ export default class Chat extends Component {
 						/>
 					</Col>
 
-					<Col md="8" sm="8" xs="12" id="chat_list_wrapper">
+					<Col md="8" sm="8" xs="12" id={style.chat_list_wrapper}>
 						<Row>
 							<ChatList allMessage={allMessage} username={username} message={message} type={activeUserList}/>
 						</Row>

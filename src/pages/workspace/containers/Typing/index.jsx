@@ -72,7 +72,9 @@ export default class Typing extends Component {
 	// 키이벤트
 	keyPressHandler = (e) => {
 		if (e.key === 'Enter') {
-			this.massageSendHandler();
+			if (e.nativeEvent.isComposing === false) {
+				this.massageSendHandler();
+			}
 		}
 	};
 

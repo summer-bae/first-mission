@@ -1,0 +1,10 @@
+#chat_wrapper{
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+#chat_list_wrapper{
+    border: 2px solid #ccc;
+    padding-left: 0%;
+    padding-right: 0%;
+}

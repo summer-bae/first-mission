@@ -4,6 +4,8 @@ const User = require('../../models/account/account');
 const PublicRoom = require('../../models/chat/publicRoom');
 const PrivateMessage = require('../../models/chat/privateMessage');
 const PublicMessage = require('../../models/chat/publicMessage');
+const moment = require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
 
 module.exports = (server) => {
 	const io = socketIo(server, {
@@ -27,7 +29,7 @@ module.exports = (server) => {
 								username: username,
 								socketId: socket.id,
 								userId: user._id,
-								createdAt: Date.now(),
+								createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
 							});
 							publicRoom.save((err) => {
 								if (err) throw err;
@@ -35,10 +37,10 @@ module.exports = (server) => {
 								io.emit('success public room');
 							});
 						} else {
-							// 만약 저장되어있는 socket이 현재 연결되어있는 소켓이 아니라면 (이력만 남아있거나 페이지 새로고침했을경우)
+							// 이력만 남아있거나 페이지 새로고침 했을 경우
 							// 이후 동일하게 새롭게 로그인한 socket에 id를 저장하고 알림
 							participant.socketId = socket.id;
-							participant.createdAt = Date.now();
+							participant.createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
 							participant.save((err) => {
 								if (err) throw err;
 								io.emit('success public room');
@@ -79,13 +81,13 @@ module.exports = (server) => {
 								sender: user._id,
 								username: username,
 								message: msg,
-								createdAt: Date.now(),
+								createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
 							});
 
 							publicMessage.save((err) => {
 								if (err) throw err;
 								else {
-									console.log("public send message!");
+									console.log("public send message!", msg);
 									// 채팅 내용이 저장 됐다면
 									io.emit('public message', publicMessage);
 								}
@@ -96,7 +98,7 @@ module.exports = (server) => {
 			});
 		});
 
-		//모든 전체 채팅 내용
+		// 전체 채팅 내용
 		socket.on('get public message', (username) => {
 			// 요청한 사용자의 socket id검색
 			PublicRoom.findOne({ username: username }, (err, user) => {
@@ -115,7 +117,6 @@ module.exports = (server) => {
 
 		// 귓속말 채팅 보내기
 		socket.on('private send message', (from, to, msg) => {
-			console.log(`${from} 님이 ${to}님에게 ${msg} 를 보냈습니다.`);
 
 			// 두 유저가 존재하는 유저인지 확인
 			Promise.all([User.findOne({ id: from }), User.findOne({ id: to })])
@@ -129,7 +130,7 @@ module.exports = (server) => {
 							message: msg,
 							receiver: toUser._id,
 							receiverName: to,
-							createdAt: Date.now(),
+							createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
 						});
 						// 귓속말 저장
 						privateMessage.save((err) => {
@@ -151,7 +152,6 @@ module.exports = (server) => {
 
 		// 귓속말 채팅 내용
 		socket.on('get private message', (from, to) => {
-			console.log(`${from} 님과 ${to}님의 모든 대화 내용`);
 
 			// 존재하는 유저인지 파악
 			Promise.all([User.findOne({ id: from }), User.findOne({ id: to })]).then((users) => {
@@ -182,7 +182,7 @@ module.exports = (server) => {
 
 		// 연결 끊겼을때
 		socket.on('disconnect', () => {
-			getClientList();
+			console.log("disconnect");
 		});
 	});
 };

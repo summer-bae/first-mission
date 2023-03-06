@@ -5,7 +5,7 @@ import axios from 'axios';
 import style from './style.scss';
 import io from 'socket.io-client';
 
-import Chat from '../../chat/Chat';
+import Chat from '../Chat/Chat';
 
 const socket = io.connect('', {
 	path: '/socket.io',
@@ -56,6 +56,7 @@ class Header extends React.Component {
 			});
 		});
 	}
+	
 
 	componentDidUpdate(prevProps, prevState) {
 		const {
@@ -106,6 +107,7 @@ class Header extends React.Component {
 
 	render() {
 		const { username } = this.state;
+
 		return (
 			<>
 				<div className={style.Header}>
@@ -127,6 +129,7 @@ class Header extends React.Component {
 					privateMessage={this.state.privateMessage}
 					message={this.state.message}
 				/>
+				<hr />
 			</>
 		);
 	}
