@@ -8,7 +8,7 @@ import UserList from '../UserList';
 import ChatList from '../ChatList';
 import axios from 'axios';
 // import * as style from './chat.css';
-// import style from './chat.css';
+import style from './chat.css';
 
 type ChatProps = {
 	socket: any;
@@ -20,6 +20,7 @@ type ChatProps = {
 
 // function Chat(props) 
 function Chat(props: ChatProps) {
+	console.log("!!ENter", props);
 	const [socket, setSocket] = useState(props.socket);
 	const [username, setUsername] = useState(props.username);
 	const [allUsers, setAllUsers] = useState(props.allUsers);

@@ -32,8 +32,11 @@ const Typing_1 = __importDefault(require("../Typing"));
 const UserList_1 = __importDefault(require("../UserList"));
 const ChatList_1 = __importDefault(require("../ChatList"));
 const axios_1 = __importDefault(require("axios"));
+// import * as style from './chat.css';
+const chat_css_1 = __importDefault(require("./chat.css"));
 // function Chat(props) 
 function Chat(props) {
+    console.log("!!ENter", props);
     const [socket, setSocket] = (0, react_1.useState)(props.socket);
     const [username, setUsername] = (0, react_1.useState)(props.username);
     const [allUsers, setAllUsers] = (0, react_1.useState)(props.allUsers);
@@ -82,10 +85,10 @@ function Chat(props) {
         setActiveUserList(activeUser);
     }
     return (react_1.default.createElement(reactstrap_1.Container, null,
-        react_1.default.createElement(reactstrap_1.Row, { id: style.chat_wrapper },
+        react_1.default.createElement(reactstrap_1.Row, { id: chat_css_1.default.chat_wrapper },
             react_1.default.createElement(reactstrap_1.Col, { md: "4", sm: "4", xs: "12", id: "user_list_wrapper" },
                 react_1.default.createElement(UserList_1.default, { allUsers: allUsers, username: username, socket: socket, receiveActiveUser: receiveActiveUser })),
-            react_1.default.createElement(reactstrap_1.Col, { md: "8", sm: "8", xs: "12", id: style.chat_list_wrapper },
+            react_1.default.createElement(reactstrap_1.Col, { md: "8", sm: "8", xs: "12", id: chat_css_1.default.chat_list_wrapper },
                 react_1.default.createElement(reactstrap_1.Row, null,
                     react_1.default.createElement(ChatList_1.default, { allMessage: allMessage, username: username, message: message, type: activeUserList })),
                 react_1.default.createElement(reactstrap_1.Row, null,

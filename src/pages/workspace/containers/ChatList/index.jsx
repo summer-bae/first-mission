@@ -1,70 +1,76 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import style from './chatlist.css';
 
-export default class ChatList extends Component {
-	constructor(props) {
-		super(props);
+export default function ChatList(props) {
+	// constructor(props) {
+	// 	super(props);
 
-		this.state = {
-			allMessage: props.allMessage,
-			username: props.username,
-			message: props.message,
-			type: props.type,
-		};
-	}
+	// 	this.state = {
+	// 		allMessage: props.allMessage,
+	// 		username: props.username,
+	// 		message: props.message,
+	// 		type: props.type,
+	// 	};
+	// }
 
-	static getDerivedStateFromProps(nextProps, prevState) {
-		// 메시지 변경되었을떄
-		if (nextProps.allMessage !== prevState.allMessage) {
-			console.log(prevState.type);
-			return {
-				allMessage: nextProps.allMessage,
-			};
-		}
+	const [allMessage, setAllMessage] = useState(props.allMessage);
+	const [username, setUsername] = useState(props.username);
+	const [message, setMessage] = useState(props.message);
+	const [type, setType] = useState(props.type);
 
-		// 메시지 변경되었을떄
-		if (nextProps.message !== prevState.message) {
-			return {
-				message: nextProps.message,
-			};
-		}
+	// static getDerivedStateFromProps(nextProps, prevState) {
+	// 	// 메시지 변경되었을떄
+	// 	if (nextProps.allMessage !== prevState.allMessage) {
+	// 		console.log(prevState.type);
+	// 		return {
+	// 			allMessage: nextProps.allMessage,
+	// 		};
+	// 	}
 
-		if (nextProps.username !== prevState.username) {
-			return {
-				username: nextProps.username,
-			};
-		}
+	// 	// 메시지 변경되었을떄
+	// 	if (nextProps.message !== prevState.message) {
+	// 		return {
+	// 			message: nextProps.message,
+	// 		};
+	// 	}
 
-		if (nextProps.type !== prevState.type) {
-			return {
-				type: nextProps.type,
-			};
-		}
+	// 	if (nextProps.username !== prevState.username) {
+	// 		return {
+	// 			username: nextProps.username,
+	// 		};
+	// 	}
 
-		return null;
-	}
+	// 	if (nextProps.type !== prevState.type) {
+	// 		return {
+	// 			type: nextProps.type,
+	// 		};
+	// 	}
 
-	makePublicChatList = (list) => {
+	// 	return null;
+	// 
+
+	function makePublicChatList(list) {
 		if (list) {
 			return list.map((item) => {
-				return this.distinctMsg(item);
+				return distinctMsg(item);
 			});
 		}
-	};
+	}
 
-	distinctMsg = (item) => {
+	function distinctMsg(item) {
 		const { _id, username, message, createdAt } = item;
+		console.log(item);
 
-		if (username !== this.state.username) {
+		if (item.username !== username) {
 			// 내가 보낸 것이 아니라면
 			return (
 				<div className="incoming_msg chat_content" key={_id}>
 					<div className={style.received_msg}>
 						<div className={style.received_withd_msg}>
-							<strong>{username}</strong>
-							<p>{message}</p>
+							<strong>{item.username}</strong>
+							<p>{item.message}</p>
 							<span style={{ color: '#cccccc', fontSize: 'x-small' }}>
-								{createdAt}
+								{item.createdAt}
 							</span>
 						</div>
 					</div>
@@ -75,30 +81,23 @@ export default class ChatList extends Component {
 			return (
 				<div className="outgoing_msg chat_content" key={_id}>
 					<div className={style.sent_msg}>
-						<p>{message}</p>
-						<span style={{ color: '#cccccc', fontSize: 'x-small' }}>{createdAt}</span>
+						<p>{item.message}</p>
+						<span style={{ color: '#cccccc', fontSize: 'x-small' }}>
+							{item.createdAt}
+						</span>
 					</div>
 				</div>
 			);
 		}
-	};
+	}
 
-	render() {
-		if (this.state.type === 'public') {
-			const allMessage = this.state.allMessage;
-			console.log("!_!public");
-			return (
-				<div id={style.chat_ul}>
-					{allMessage ? this.makePublicChatList(allMessage) : ''}
-				</div>
-			);
-		} else {
-			const allMessage = this.state.message;
-			return (
-				<div id={style.chat_ul}>
-					{allMessage ? this.makePublicChatList(allMessage) : ''}
-				</div>
-			);
-		}
+	if (this.state.type === 'public') {
+		return (
+			<div id={style.chat_ul}>{allMessage ? this.makePublicChatList(allMessage) : ''}</div>
+		);
+	} else {
+		return (
+			<div id={style.chat_ul}>{message ? this.makePublicChatList(message) : ''}</div>
+		);
 	}
 }
