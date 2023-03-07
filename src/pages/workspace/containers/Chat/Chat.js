@@ -32,11 +32,8 @@ const Typing_1 = __importDefault(require("../Typing"));
 const UserList_1 = __importDefault(require("../UserList"));
 const ChatList_1 = __importDefault(require("../ChatList"));
 const axios_1 = __importDefault(require("axios"));
-// import * as style from './chat.css';
 const chat_css_1 = __importDefault(require("./chat.css"));
-// function Chat(props) 
 function Chat(props) {
-    console.log("!!ENter", props);
     const [socket, setSocket] = (0, react_1.useState)(props.socket);
     const [username, setUsername] = (0, react_1.useState)(props.username);
     const [allUsers, setAllUsers] = (0, react_1.useState)(props.allUsers);
@@ -46,7 +43,6 @@ function Chat(props) {
     // 마지막 메시지 스크롤 포커스
     function lastLineFocus() {
         const lists = document.getElementsByClassName('chat_content');
-        console.log(lists.length);
         if (lists.length > 0) {
             lists[lists.length - 1].scrollIntoView();
         }
@@ -63,7 +59,6 @@ function Chat(props) {
         lastLineFocus();
     }, []);
     (0, react_1.useEffect)(() => {
-        console.log(allMessage);
         socket.on('public all message', (obj) => {
             setAllMessage(obj);
         });
@@ -77,7 +72,6 @@ function Chat(props) {
     }, [message]);
     (0, react_1.useEffect)(() => {
         socket.on('success get users', (allUsers) => {
-            console.log(allUsers);
             setAllUsers(allUsers);
         });
     }, [allUsers]);

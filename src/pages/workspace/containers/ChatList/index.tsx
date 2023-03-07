@@ -17,8 +17,6 @@ export default function ChatList(props: ChatProps) {
 
 	function distinctMsg(item) {
 		const { _id, username, message, createdAt } = item;
-		console.log(item, item.username, user);
-
 		if (item.username != user) {
 			// 내가 보낸 것이 아니라면
 			return (
