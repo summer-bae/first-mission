@@ -82,7 +82,7 @@ module.exports = {
 		include: /node_modules/
 	},
 	resolve: {
-		extensions: ['.js', '.jsx', 'json'],
+		extensions: ['.js', '.jsx', 'json', '.tsx', '.ts'],
 		alias: {
 			pages: path.resolve(__dirname, './src/pages'),
 			components: path.resolve(__dirname, './src/components')

@@ -9,9 +9,10 @@ module.exports = {
 	name: 'client',
 	mode: configUtil.mode,
 	target: 'web',
+	devtool: 'inline-source-map',
 	entry: {
 		AccountApp: path.resolve('./src/apps/account/client.jsx'),
-		WorkspaceApp: path.resolve('./src/apps/workspace/client.jsx')
+		WorkspaceApp: path.resolve('./src/apps/workspace/client.tsx')
 	},
 	output: {
 		path: path.resolve(__dirname, 'dist/client'),
@@ -23,7 +24,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.(jsx|js)$/,
+				test: /\.(jsx|js|tsx|ts)$/,
 				exclude: /node_modules/,
 				include: path.resolve(__dirname, 'src'),
 				use: [

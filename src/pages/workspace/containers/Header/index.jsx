@@ -5,7 +5,7 @@ import axios from 'axios';
 import style from './style.scss';
 import io from 'socket.io-client';
 
-import Chat from '../Chat/Chat';
+import Chat from '../Chat/Chat.tsx';
 
 const socket = io.connect('', {
 	path: '/socket.io',
@@ -124,9 +124,7 @@ class Header extends React.Component {
 					socket={this.state.socket}
 					username={this.state.username}
 					allUsers={this.state.allUsers}
-					publicMessage={this.state.publicMessage}
 					allMessage={this.state.allMessage}
-					privateMessage={this.state.privateMessage}
 					message={this.state.message}
 				/>
 				<hr />
