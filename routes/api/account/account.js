@@ -1,4 +1,6 @@
 const router = require('express').Router();
+// import express, { Request, Response, Router } from 'express';
+// const router: Router = express.Router();
 const modAccount = require('../../../models/account/account');
 const util = require('./util');
 const Error = require('../util/error');
@@ -9,6 +11,11 @@ const rimraf = require('rimraf');
 const tar = require('tar-fs');
 
 const upload = require('./upload');
+
+// async function findById(id: string) {
+// 	const accountInfo = await modAccount.findOne({ id });
+// 	return accountInfo;
+// }
 
 const findById = async (id) => {
 	const accountInfo = await modAccount.findOne({ id });
