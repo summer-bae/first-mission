@@ -7,7 +7,6 @@ import Header from '../Header';
 import UserList from '../UserList';
 import ChatList from '../ChatList';
 import axios from 'axios';
-// import * as style from './chat.css';
 import style from './chat.css';
 
 type ChatProps = {
@@ -18,9 +17,7 @@ type ChatProps = {
 	message: Array<any>;
 };
 
-// function Chat(props) 
 function Chat(props: ChatProps) {
-	console.log("!!ENter", props);
 	const [socket, setSocket] = useState(props.socket);
 	const [username, setUsername] = useState(props.username);
 	const [allUsers, setAllUsers] = useState(props.allUsers);
@@ -31,7 +28,6 @@ function Chat(props: ChatProps) {
 	// 마지막 메시지 스크롤 포커스
 	function lastLineFocus() {
 		const lists = document.getElementsByClassName('chat_content');
-		console.log(lists.length);
 		if (lists.length > 0) {
 			lists[lists.length - 1].scrollIntoView();
 		}
@@ -53,7 +49,6 @@ function Chat(props: ChatProps) {
 	}, []);
 
 	useEffect(() => {
-		console.log(allMessage);
 		socket.on('public all message', (obj) => {
 			setAllMessage(obj);
 		});
@@ -71,7 +66,6 @@ function Chat(props: ChatProps) {
 
 	useEffect(() => {
 		socket.on('success get users', (allUsers) => {
-			console.log(allUsers);
 			setAllUsers(allUsers);
 		});
 	}, [allUsers]);
