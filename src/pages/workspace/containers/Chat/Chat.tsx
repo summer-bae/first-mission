@@ -15,39 +15,12 @@ const socket = io.connect('', {
 });
 
 function Chat(props) {
-	
-	const [ socket, setSocket ] = useState(props.socket);
-	const [ username, setUsername ] = useState(props.username);
-	const [ allUsers, setAllUsers ] = useState(props.allUsers);
-	const [ allMessage, setAllMessage ] = useState(props.allMessage);
-	const [ message, setMessage ] = useState(props.message);
-	const [ activeUserList, setActiveUserList ] = useState(props.activeUserList);
-
-    useEffect(() => {
-        socket.on('public message', (obj) => {
-            const temp = allMessage;
-            temp.push(obj);
-
-            setAllMessage(temp);
-
-            this.lastLineFocus();
-        });
-
-        socket.on('private message', (obj) => {
-            const temp = message;
-            temp.push(obj);
-
-            setMessage(temp);
-
-            this.lastLineFocus();
-        });
-
-        this.lastLineFocus();
-    }, []);
-
-    useEffect(() => {
-        this.lastLineFocus();
-    }, [allMessage, message]);
+    const [socket, setSocket] = useState(props.socket);
+    const [username, setUsername] = useState(props.username);
+    const [allUsers, setAllUsers] = useState(props.allUsers);
+    const [allMessage, setAllMessage] = useState(props.allMessage);
+    const [message, setMessage] = useState(props.message);
+    const [activeUserList, setActiveUserList] = useState("public");
 
     // 마지막 메시지 스크롤 포커스
     function lastLineFocus() {
@@ -56,13 +29,51 @@ function Chat(props) {
         if (lists.length > 0) {
             lists[lists.length - 1].scrollIntoView();
         }
-    };
+    }
 
+    useEffect(() => {
+        axios.get('/api/account/id').then(({ data }) => {
+            setUsername(data);
 
+            socket.emit('enter public room', data);
+            socket.on('success public room', () => {
+                socket.emit('get all users');
+            });
+			
+			socket.emit('get public message', data);
+
+        });
+
+        lastLineFocus();
+    }, []);
+
+    useEffect(() => {
+		console.log(allMessage);
+        socket.on('public all message', (obj) => {
+            setAllMessage(obj);
+        });
+
+        lastLineFocus();
+    }, [allMessage]);
+
+    useEffect(() => {
+        socket.on('private get message', (obj) => {
+            setMessage(obj);
+        });
+
+        lastLineFocus();
+    }, [message]);
+
+    useEffect(() => {
+        socket.on('success get users', (allUsers) => {
+			console.log(allUsers);
+            setAllUsers(allUsers);
+        });
+    }, [allUsers]);
 
     function receiveActiveUser(activeUser) {
         setActiveUserList(activeUser);
-    };
+    }
 
     return (
         <Container>

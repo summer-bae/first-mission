@@ -25,6 +25,7 @@ module.exports = (server) => {
                         if (err) throw err;
                         if (!participant) {
                             //참여자 정보가 없다면 publicRoom에 참여자로 저장
+							console.log("no part");
                             const publicRoom = new PublicRoom({
                                 username: username,
                                 socketId: socket.id,
@@ -39,6 +40,7 @@ module.exports = (server) => {
                         } else {
                             // 이력만 남아있거나 페이지 새로고침 했을 경우
                             // 이후 동일하게 새롭게 로그인한 socket에 id를 저장하고 알림
+							console.log("par");
                             participant.socketId = socket.id;
                             participant.createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
                             participant.save((err) => {
@@ -70,6 +72,7 @@ module.exports = (server) => {
 
         // 클라이언트에게 전체 메시지를 받으면
         socket.on('public send message', (username, msg) => {
+			console.log(username, msg);
             User.findOne({ id: username }, (err, user) => {
                 if (err) throw err;
                 else {
@@ -115,6 +118,7 @@ module.exports = (server) => {
 
         // 전체 채팅 내용
         socket.on('get public message', (username) => {
+			console.log('get public message!', username);
             // 요청한 사용자의 socket id검색
             PublicRoom.findOne({ username: username }, (err, user) => {
                 if (err) throw err;

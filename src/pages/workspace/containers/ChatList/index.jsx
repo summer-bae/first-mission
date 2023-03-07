@@ -16,7 +16,7 @@ export default class ChatList extends Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
 		// 메시지 변경되었을떄
 		if (nextProps.allMessage !== prevState.allMessage) {
-			console.log("change");
+			console.log(prevState.type);
 			return {
 				allMessage: nextProps.allMessage,
 			};
@@ -86,6 +86,7 @@ export default class ChatList extends Component {
 	render() {
 		if (this.state.type === 'public') {
 			const allMessage = this.state.allMessage;
+			console.log("!_!public");
 			return (
 				<div id={style.chat_ul}>
 					{allMessage ? this.makePublicChatList(allMessage) : ''}
