@@ -10,15 +10,16 @@ type ChatProps = {
 
 export default function ChatList(props: ChatProps) {
 	const [allMessage, setAllMessage] = useState<Array<any> | null>(props.allMessage);
-	const [username, setUsername] = useState<string>(props.username);
+	const [user, setUser] = useState<string>(props.username);
 	const [message, setMessage] = useState<Array<any> | null>(props.message);
 	const [type, setType] = useState<string>(props.type);
 	
 
 	function distinctMsg(item) {
 		const { _id, username, message, createdAt } = item;
+		console.log(item, item.username, user);
 
-		if (item.username !== username) {
+		if (item.username != user) {
 			// 내가 보낸 것이 아니라면
 			return (
 				<div className="incoming_msg chat_content" key={item._id}>
@@ -77,6 +78,13 @@ export default function ChatList(props: ChatProps) {
 			setType(props.type);
 		}
 	}, [props.type]);
+	
+	useMemo(() => {
+		console.log("USER CHANGE")
+		if (props.username) {
+			setUser(props.username);
+		}
+	}, [props.username]);
 
 	if (type === 'public') {
 		return <div id={style.chat_ul}>{allMessage ? makePublicChatList(allMessage) : ''}</div>;
