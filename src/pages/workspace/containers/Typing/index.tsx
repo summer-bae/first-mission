@@ -13,28 +13,6 @@ function Typing(props: TypingProps) {
 	const [allUsers, setAllUsers] = useState(props.allUsers);
 	const [message, setMessage] = useState('');
 
-	// static getDerivedStateFromProps(nextProps, prevState) {
-	// 	if (nextProps.socket !== prevState.socket) {
-	// 		return {
-	// 			socket: nextProps.socket,
-	// 		};
-	// 	}
-
-	// 	if (nextProps.allUsers !== prevState.allUsers) {
-	// 		return {
-	// 			allUsers: nextProps.allUsers,
-	// 		};
-	// 	}
-
-	// 	if (nextProps.username !== prevState.username) {
-	// 		return {
-	// 			username: nextProps.username,
-	// 		};
-	// 	}
-
-	// 	return null;
-	// }
-
 	useMemo(() => {
 		if (props.allUsers) {
 			setAllUsers(props.allUsers);
