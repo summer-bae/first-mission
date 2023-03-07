@@ -5,7 +5,7 @@ import style from './file.css';
 
 const JSZip = require('jszip');
 
-export default function File() {
+function File() {
 	const [uploadFile, setUploadFile] = useState<string>('');
 	const [fileList, setFileList] = useState([]);
 	const [selectFile, setSelectFile] = useState<string>('');
@@ -150,3 +150,5 @@ export default function File() {
 	);
 	// }
 }
+
+export default File;

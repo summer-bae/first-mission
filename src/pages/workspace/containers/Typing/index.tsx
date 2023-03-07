@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { Col, InputGroup, InputGroupAddon, Input, Button } from 'reactstrap';
 
-type TypingProps = {
+type FromChatProps = {
 	socket: any;
 	username: string;
 	allUsers: Array<any>;
 };
 
-function Typing(props: TypingProps) {
+function Typing(props: FromChatProps) {
 	const [socket, setSocket] = useState(props.socket);
 	const [username, setUsername] = useState(props.username);
 	const [allUsers, setAllUsers] = useState(props.allUsers);
