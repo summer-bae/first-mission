@@ -1,12 +1,27 @@
-const bcrypt = require('bcrypt');
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isEqualPw = exports.genHashedPw = void 0;
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const saltRounds = 10;
-
-exports.genHashedPw = async rawPw => {
-	const hashedPw = await bcrypt.hash(rawPw, saltRounds);
-	return hashedPw;
-};
-
-exports.isEqualPw = async (rawPw, hashedPw) => {
-	const isEqual = await bcrypt.compare(rawPw, hashedPw);
-	return isEqual;
-};
+const genHashedPw = (rawPw) => __awaiter(void 0, void 0, void 0, function* () {
+    const hashedPw = yield bcrypt_1.default.hash(rawPw, saltRounds);
+    return hashedPw;
+});
+exports.genHashedPw = genHashedPw;
+const isEqualPw = (rawPw, hashedPw) => __awaiter(void 0, void 0, void 0, function* () {
+    const isEqual = yield bcrypt_1.default.compare(rawPw, hashedPw);
+    return isEqual;
+});
+exports.isEqualPw = isEqualPw;
