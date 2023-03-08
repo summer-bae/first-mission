@@ -74,7 +74,7 @@ module.exports = (server: any) => {
             User.findOne({ id: username }, (err: any, user: { _id: any; }) => {
                 if (err) throw err;
                 else {
-                    PublicRoom.findOne({ username: username }, (err: any, participant: any) => {
+                    PublicRoom.findOne({ username: username }, (err: any, participant: publicRoomType) => {
                         if (err) throw err;
                         else {
                             // 전체 채팅 내용 저장
@@ -118,12 +118,12 @@ module.exports = (server: any) => {
         socket.on('get public message', (username: string) => {
 			console.log('get public message!', username);
             // 요청한 사용자의 socket id검색
-            PublicRoom.findOne({ username: username }, (err: any, user: any) => {
+            PublicRoom.findOne({ username: username }, (err: any, user: publicRoomType) => {
                 if (err) throw err;
                 else {
                     PublicMessage.find({})
                         .sort({ createdAt: 'asc' })
-                        .exec((err: any, messages: any) => {
+                        .exec((err: any, messages: publicMessageType) => {
                             if (err) throw err;
                             // 요청한 클라이언트에게 전달 채팅 내역 전달
                             io.to(socket.id).emit('public all message', messages);
@@ -174,7 +174,7 @@ module.exports = (server: any) => {
                                         ]).then((messages) => {
                                             const [fromMsg, toMsg] = messages;
                                             const message = [...fromMsg, ...toMsg];
-                                            const dateSort = (a: { createdAt: number; }, b: { createdAt: number; }) => {
+                                            const dateSort = (a: { createdAt: String }, b: { createdAt: String }) => {
                                                 if (a.createdAt == b.createdAt) {
                                                     return 0;
                                                 }
@@ -214,7 +214,7 @@ module.exports = (server: any) => {
                     ]).then((messages) => {
                         const [fromMsg, toMsg] = messages;
                         const message = [...fromMsg, ...toMsg];
-                        const dateSort = (a: { createdAt: number; }, b: { createdAt: number; }) => {
+                        const dateSort = (a: { createdAt: String }, b: { createdAt: String }) => {
                             if (a.createdAt == b.createdAt) {
                                 return 0;
                             }
