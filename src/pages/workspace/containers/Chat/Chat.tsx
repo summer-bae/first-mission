@@ -96,7 +96,6 @@ function Chat(props: ChatProps) {
 						<Typing
 							socket={socket}
 							activeUserList={activeUserList}
-							allUsers={allUsers}
 							username={username}
 						/>
 					</Row>

@@ -50,10 +50,7 @@ function File() {
     function getFileList(e) {
         const file = uploadFile;
         const reader = new FileReader();
-        console.log(file.substring(file.length - 3, 3));
-        console.log(typeof file);
-        // file.name -> file ?
-        if (file.substring(file.length - 3, 3) === 'zip') {
+        if (file.name.substr(file.name.length - 3) === 'zip') {
             reader.onload = (e) => {
                 jszip_1.default.loadAsync(e.target.result).then((obj) => {
                     setFileList(Object.values(obj.files));

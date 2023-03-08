@@ -6,8 +6,8 @@ import style from './file.module.css';
 import JSZip from 'jszip';
 
 function File() {
-	const [uploadFile, setUploadFile] = useState<string>('');
-	const [fileList, setFileList] = useState([]);
+	const [uploadFile, setUploadFile] = useState<any>('');
+	const [fileList, setFileList] = useState<any>([]);
 	const [selectFile, setSelectFile] = useState<string>('');
 	const [contents, setContents] = useState<string>('편집할 파일을 선택해주세요');
 
@@ -27,12 +27,8 @@ function File() {
 	function getFileList(e) {
 		const file = uploadFile;
 		const reader = new FileReader();
-		console.log(file.substring(file.length - 3, 3));
-		console.log(typeof file);
 
-		// file.name -> file ?
-		if (file.substring(file.length - 3, 3) === 'zip') {
-
+		if (file.name.substr(file.name.length - 3) === 'zip') {
 			reader.onload = (e) => {
 				JSZip.loadAsync(e.target.result).then((obj) => {
 					setFileList(Object.values(obj.files));

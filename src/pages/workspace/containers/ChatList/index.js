@@ -53,20 +53,10 @@ function ChatList(props) {
     }
     function makePublicChatList(list) {
         if (list) {
-            list.map((item) => {
+            return list.map((item) => {
                 return distinctMsg(item);
             });
         }
-        else {
-            return react_1.default.createElement(react_1.default.Fragment, null);
-        }
-        // if (list) {
-        // 	return list.map((item) => {
-        // 		console.log("item ", item);
-        // 		return <div>hi</div>
-        // 		// return distinctMsg(item);
-        // 	});
-        // }
     }
     (0, react_1.useEffect)(() => {
         console.log('!!', props);

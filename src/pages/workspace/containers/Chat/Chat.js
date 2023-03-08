@@ -86,6 +86,6 @@ function Chat(props) {
                 react_1.default.createElement(reactstrap_1.Row, null,
                     react_1.default.createElement(ChatList_1.default, { allMessage: allMessage, username: username, message: message, type: activeUserList })),
                 react_1.default.createElement(reactstrap_1.Row, null,
-                    react_1.default.createElement(Typing_1.default, { socket: socket, activeUserList: activeUserList, allUsers: allUsers, username: username }))))));
+                    react_1.default.createElement(Typing_1.default, { socket: socket, activeUserList: activeUserList, username: username }))))));
 }
 exports.default = Chat;

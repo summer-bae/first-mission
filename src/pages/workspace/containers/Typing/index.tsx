@@ -1,24 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { Col, InputGroup, InputGroupAddon, Input, Button } from 'reactstrap';
+import { Col, InputGroup, Input, Button } from 'reactstrap';
 
 type FromChatProps = {
 	socket: any;
 	username: string;
-	allUsers: Array<any> | null;
 	activeUserList: string;
 };
 
 function Typing(props: FromChatProps) {
 	const [socket, setSocket] = useState(props.socket);
 	const [username, setUsername] = useState(props.username);
-	const [allUsers, setAllUsers] = useState(props.allUsers);
 	const [message, setMessage] = useState('');
-
-	useMemo(() => {
-		if (props.allUsers) {
-			setAllUsers(props.allUsers);
-		}
-	}, [props.allUsers]);
 
 	useMemo(() => {
 		setSocket(props.socket);
@@ -68,7 +60,6 @@ function Typing(props: FromChatProps) {
 	return (
 		<Col>
 			<InputGroup>
-				<InputGroupAddon addonType="prepend">{allUsers}</InputGroupAddon>
 				<Input
 					placeholder="메시지를 입력하세요"
 					onChange={messageChangeHandler}

@@ -28,13 +28,7 @@ const reactstrap_1 = require("reactstrap");
 function Typing(props) {
     const [socket, setSocket] = (0, react_1.useState)(props.socket);
     const [username, setUsername] = (0, react_1.useState)(props.username);
-    const [allUsers, setAllUsers] = (0, react_1.useState)(props.allUsers);
     const [message, setMessage] = (0, react_1.useState)('');
-    (0, react_1.useMemo)(() => {
-        if (props.allUsers) {
-            setAllUsers(props.allUsers);
-        }
-    }, [props.allUsers]);
     (0, react_1.useMemo)(() => {
         setSocket(props.socket);
     }, [props.socket]);
@@ -77,7 +71,6 @@ function Typing(props) {
     }
     return (react_1.default.createElement(reactstrap_1.Col, null,
         react_1.default.createElement(reactstrap_1.InputGroup, null,
-            react_1.default.createElement(reactstrap_1.InputGroupAddon, { addonType: "prepend" }, allUsers),
             react_1.default.createElement(reactstrap_1.Input, { placeholder: "\uBA54\uC2DC\uC9C0\uB97C \uC785\uB825\uD558\uC138\uC694", onChange: messageChangeHandler, value: message, onKeyDown: keyPressHandler }),
             react_1.default.createElement(reactstrap_1.Button, { onClick: massageSendHandler }, "\uC804\uC1A1"))));
 }

@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import style from './chatlist.module.css';
 
 type ChatProps = {
@@ -48,19 +48,10 @@ export default function ChatList(props: ChatProps) {
 
 	function makePublicChatList(list) {
 		if (list) {
-			list.map((item) => {
+			return list.map((item) => {
 				return distinctMsg(item);
-			})
-		} else {
-			return <></>
+			});
 		}
-		// if (list) {
-		// 	return list.map((item) => {
-		// 		console.log("item ", item);
-		// 		return <div>hi</div>
-		// 		// return distinctMsg(item);
-		// 	});
-		// }
 	}
 
 	useEffect(() => {
