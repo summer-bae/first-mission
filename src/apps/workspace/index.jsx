@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import Workspace from 'pages/workspace';
-import Chat from 'pages/workspace/containers/Chat/Chat';
+import Workspace from '../../pages/workspace';
+import Chat from '../../pages/workspace/containers/Chat/Chat';
 
 const App = props => (
 	<Switch>

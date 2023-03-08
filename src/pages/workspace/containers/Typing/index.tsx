@@ -4,7 +4,8 @@ import { Col, InputGroup, InputGroupAddon, Input, Button } from 'reactstrap';
 type FromChatProps = {
 	socket: any;
 	username: string;
-	allUsers: Array<any>;
+	allUsers: Array<any> | null;
+	activeUserList: string;
 };
 
 function Typing(props: FromChatProps) {

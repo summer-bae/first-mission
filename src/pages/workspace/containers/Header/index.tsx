@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { DropdownToggle, UncontrolledDropdown, DropdownMenu, DropdownItem } from 'reactstrap';
 import axios from 'axios';
 
-import style from './style.scss';
-import io from 'socket.io-client';
+import style from './style.module.scss';
+import * as io from 'socket.io-client';
 
-import Chat from '../Chat/Chat.tsx';
+import Chat from '../Chat/Chat';
 
 const newSocket = io.connect('', {
 	path: '/socket.io',

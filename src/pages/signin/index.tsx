@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FormText } from 'reactstrap';
 
-import DefaultUserInfoInputGroup from 'components/DefaultUserInfoInputGroup';
-import CenterLayout from 'components/CenterLayout';
-import AccountButtonGroup from 'components/AccountButtonGroup';
+import DefaultUserInfoInputGroup from '../../components/DefaultUserInfoInputGroup';
+import CenterLayout from '../../components/CenterLayout';
+import AccountButtonGroup from '../../components/AccountButtonGroup';
 
-import style from './style.scss';
+import style from './style.module.scss';
 
 function getErrorMsg(errCode) {
 	let errorMsg;
@@ -24,7 +24,7 @@ function getErrorMsg(errCode) {
 	return errorMsg;
 }
 
-function Signin() {
+function SignIn() {
 	const [id, setId] = useState<string>('');
 	const [pw, setPw] = useState<string>('');
 	const [errorMsg, setErrorMsg] = useState<string>('');
@@ -69,4 +69,4 @@ function Signin() {
 	);
 }
 
-export default Signin;
+export default SignIn;

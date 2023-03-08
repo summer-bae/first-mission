@@ -27,37 +27,46 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
-const chatlist_css_1 = __importDefault(require("./chatlist.css"));
+const chatlist_module_css_1 = __importDefault(require("./chatlist.module.css"));
 function ChatList(props) {
     const [allMessage, setAllMessage] = (0, react_1.useState)(props.allMessage);
     const [user, setUser] = (0, react_1.useState)(props.username);
     const [message, setMessage] = (0, react_1.useState)(props.message);
     const [type, setType] = (0, react_1.useState)(props.type);
     function distinctMsg(item) {
-        const { _id, username, message, createdAt } = item;
         if (item.username != user) {
             // 내가 보낸 것이 아니라면
             return (react_1.default.createElement("div", { className: "incoming_msg chat_content", key: item._id },
-                react_1.default.createElement("div", { className: chatlist_css_1.default.received_msg },
-                    react_1.default.createElement("div", { className: chatlist_css_1.default.received_withd_msg },
+                react_1.default.createElement("div", { className: chatlist_module_css_1.default.received_msg },
+                    react_1.default.createElement("div", { className: chatlist_module_css_1.default.received_withd_msg },
                         react_1.default.createElement("strong", null, item.username),
                         react_1.default.createElement("p", null, item.message),
                         react_1.default.createElement("span", { style: { color: '#cccccc', fontSize: 'x-small' } }, item.createdAt)))));
         }
         else {
             // 내가 보낸 것이라면
-            return (react_1.default.createElement("div", { className: "outgoing_msg chat_content", key: _id },
-                react_1.default.createElement("div", { className: chatlist_css_1.default.sent_msg },
+            return (react_1.default.createElement("div", { className: "outgoing_msg chat_content", key: item._id },
+                react_1.default.createElement("div", { className: chatlist_module_css_1.default.sent_msg },
                     react_1.default.createElement("p", null, item.message),
                     react_1.default.createElement("span", { style: { color: '#cccccc', fontSize: 'x-small' } }, item.createdAt))));
         }
     }
     function makePublicChatList(list) {
         if (list) {
-            return list.map((item) => {
+            list.map((item) => {
                 return distinctMsg(item);
             });
         }
+        else {
+            return react_1.default.createElement(react_1.default.Fragment, null);
+        }
+        // if (list) {
+        // 	return list.map((item) => {
+        // 		console.log("item ", item);
+        // 		return <div>hi</div>
+        // 		// return distinctMsg(item);
+        // 	});
+        // }
     }
     (0, react_1.useEffect)(() => {
         console.log('!!', props);
@@ -84,10 +93,10 @@ function ChatList(props) {
         }
     }, [props.username]);
     if (type === 'public') {
-        return react_1.default.createElement("div", { id: chatlist_css_1.default.chat_ul }, allMessage ? makePublicChatList(allMessage) : '');
+        return react_1.default.createElement("div", { id: chatlist_module_css_1.default.chat_ul }, allMessage ? makePublicChatList(allMessage) : '');
     }
     else {
-        return react_1.default.createElement("div", { id: chatlist_css_1.default.chat_ul }, message ? makePublicChatList(message) : '');
+        return react_1.default.createElement("div", { id: chatlist_module_css_1.default.chat_ul }, message ? makePublicChatList(message) : '');
     }
 }
 exports.default = ChatList;

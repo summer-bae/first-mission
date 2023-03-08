@@ -1,10 +1,10 @@
 import React, { Component, useState, useEffect, useMemo, useCallback } from 'react';
-import style from './chatlist.css';
+import style from './chatlist.module.css';
 
 type ChatProps = {
 	username: string;
-	message: Array<any>;
-	allMessage: Array<any>;
+	message: Array<any> | null;
+	allMessage: Array<any> | null;
 	type: string;
 };
 
@@ -16,7 +16,6 @@ export default function ChatList(props: ChatProps) {
 	
 
 	function distinctMsg(item) {
-		const { _id, username, message, createdAt } = item;
 		if (item.username != user) {
 			// 내가 보낸 것이 아니라면
 			return (
@@ -35,7 +34,7 @@ export default function ChatList(props: ChatProps) {
 		} else {
 			// 내가 보낸 것이라면
 			return (
-				<div className="outgoing_msg chat_content" key={_id}>
+				<div className="outgoing_msg chat_content" key={item._id}>
 					<div className={style.sent_msg}>
 						<p>{item.message}</p>
 						<span style={{ color: '#cccccc', fontSize: 'x-small' }}>
@@ -49,10 +48,19 @@ export default function ChatList(props: ChatProps) {
 
 	function makePublicChatList(list) {
 		if (list) {
-			return list.map((item) => {
+			list.map((item) => {
 				return distinctMsg(item);
-			});
+			})
+		} else {
+			return <></>
 		}
+		// if (list) {
+		// 	return list.map((item) => {
+		// 		console.log("item ", item);
+		// 		return <div>hi</div>
+		// 		// return distinctMsg(item);
+		// 	});
+		// }
 	}
 
 	useEffect(() => {

@@ -28,8 +28,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
-const file_css_1 = __importDefault(require("./file.css"));
-const JSZip = require('jszip');
+const file_module_css_1 = __importDefault(require("./file.module.css"));
+const jszip_1 = __importDefault(require("jszip"));
 function File() {
     const [uploadFile, setUploadFile] = (0, react_1.useState)('');
     const [fileList, setFileList] = (0, react_1.useState)([]);
@@ -50,9 +50,12 @@ function File() {
     function getFileList(e) {
         const file = uploadFile;
         const reader = new FileReader();
-        if (file.name.substr(file.name.length - 3) === 'zip') {
+        console.log(file.substring(file.length - 3, 3));
+        console.log(typeof file);
+        // file.name -> file ?
+        if (file.substring(file.length - 3, 3) === 'zip') {
             reader.onload = (e) => {
-                JSZip.loadAsync(e.target.result).then((obj) => {
+                jszip_1.default.loadAsync(e.target.result).then((obj) => {
                     setFileList(Object.values(obj.files));
                 });
             };
@@ -115,20 +118,20 @@ function File() {
     }
     const fileListComponent = fileList.map((item, idx) => {
         if (selectFile === item.name) {
-            return (react_1.default.createElement("li", { className: file_css_1.default.select, onClick: item.dir ? handlerDirClick : handlerFileClick.bind(this, item.name) }, item.name));
+            return (react_1.default.createElement("li", { className: file_module_css_1.default.select, onClick: item.dir ? handlerDirClick : handlerFileClick.bind(this, item.name) }, item.name));
         }
         else {
-            return (react_1.default.createElement("li", { className: file_css_1.default.noselect, onClick: item.dir ? handlerDirClick : handlerFileClick.bind(this, item.name) }, item.name));
+            return (react_1.default.createElement("li", { className: file_module_css_1.default.noselect, onClick: item.dir ? handlerDirClick : handlerFileClick.bind(this, item.name) }, item.name));
         }
     });
-    return (react_1.default.createElement("div", { className: file_css_1.default.file_wrapper },
-        react_1.default.createElement("div", { className: file_css_1.default.file_upload },
-            react_1.default.createElement("input", { type: "file", name: "file", id: file_css_1.default.w, onChange: handlerFileUpload }),
+    return (react_1.default.createElement("div", { className: file_module_css_1.default.file_wrapper },
+        react_1.default.createElement("div", { className: file_module_css_1.default.file_upload },
+            react_1.default.createElement("input", { type: "file", name: "file", id: file_module_css_1.default.w, onChange: handlerFileUpload }),
             react_1.default.createElement("button", { type: "button", className: "btn btn-link", onClick: handlerFileSubmit }, "\uC5C5\uB85C\uB4DC")),
-        react_1.default.createElement("div", { className: file_css_1.default.file_list },
+        react_1.default.createElement("div", { className: file_module_css_1.default.file_list },
             react_1.default.createElement("ul", null, fileListComponent ? fileListComponent : '업로드를 해주세요')),
-        react_1.default.createElement("div", { className: file_css_1.default.file_textEdit },
-            react_1.default.createElement("textarea", { rows: "10", cols: "60", value: contents, onChange: handlerChangeContents }),
+        react_1.default.createElement("div", { className: file_module_css_1.default.file_textEdit },
+            react_1.default.createElement("textarea", { rows: 10, cols: 60, value: contents, onChange: handlerChangeContents }),
             react_1.default.createElement("button", { className: "btn btn-primary", onClick: handlerSaveContents }, "\uC800\uC7A5"))));
     // }
 }

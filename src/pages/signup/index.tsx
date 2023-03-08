@@ -3,10 +3,10 @@ import { Input, FormText } from 'reactstrap';
 import axios from 'axios';
 
 import DefaultUserInfoInputGroup from '../../components/DefaultUserInfoInputGroup';
-import CenterLayout from 'components/CenterLayout';
-import AccountButtonGroup from 'components/AccountButtonGroup';
+import CenterLayout from '../../components/CenterLayout';
+import AccountButtonGroup from '../../components/AccountButtonGroup';
 
-import style from './style.scss';
+import style from './style.module.scss';
 
 function getErrorMsg(errCode) {
 	let errorMsg;
@@ -24,7 +24,7 @@ function getErrorMsg(errCode) {
 	return errorMsg;
 }
 
-function Signup() {
+function SignUp() {
 	const [id, setId] = useState<string>('');
 	const [pw, setPw] = useState<string>('');
 	const [repw, setRepw] = useState<string>('');
@@ -87,4 +87,4 @@ function Signup() {
 	);
 }
 
-export default Signup;
+export default SignUp;

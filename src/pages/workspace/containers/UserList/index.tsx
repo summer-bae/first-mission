@@ -2,7 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 type FromChatProps = {
 	socket: any;
 	username: string;
-	allUsers: Array<any>;
+	allUsers: Array<any> | null;
+	receiveActiveUser: (name: string) => void;
 };
 
 function UserList(props: FromChatProps) {
@@ -27,7 +28,7 @@ function UserList(props: FromChatProps) {
 		}
 	}, [props.username]);
 
-	useState(() => {
+	useEffect(() => {
 		socket.emit('get public message', props.username);
 	}, []);
 

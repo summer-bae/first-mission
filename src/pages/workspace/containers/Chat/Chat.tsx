@@ -1,20 +1,17 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import Typing from '../Typing';
-import { Redirect } from 'react-router-dom';
-import io from 'socket.io-client';
-import Header from '../Header';
 import UserList from '../UserList';
 import ChatList from '../ChatList';
 import axios from 'axios';
-import style from './chat.css';
+import style from './chat.module.css';
 
 type ChatProps = {
 	socket: any;
 	username: string;
-	allUsers: Array<any>;
-	allMessage: Array<any>;
-	message: Array<any>;
+	allUsers: Array<any> | null;
+	allMessage: Array<any> | null;
+	message: Array<any> | null;
 };
 
 function Chat(props: ChatProps) {
@@ -23,7 +20,7 @@ function Chat(props: ChatProps) {
 	const [allUsers, setAllUsers] = useState(props.allUsers);
 	const [allMessage, setAllMessage] = useState(props.allMessage);
 	const [message, setMessage] = useState(props.message);
-	const [activeUserList, setActiveUserList] = useState('public');
+	const [activeUserList, setActiveUserList] = useState<string>('public');
 
 	// 마지막 메시지 스크롤 포커스
 	function lastLineFocus() {
@@ -70,7 +67,7 @@ function Chat(props: ChatProps) {
 		});
 	}, [allUsers]);
 
-	function receiveActiveUser(activeUser) {
+	function receiveActiveUser(activeUser : string):void {
 		setActiveUserList(activeUser);
 	}
 
@@ -98,8 +95,9 @@ function Chat(props: ChatProps) {
 					<Row>
 						<Typing
 							socket={socket}
-							username={username}
 							activeUserList={activeUserList}
+							allUsers={allUsers}
+							username={username}
 						/>
 					</Row>
 				</Col>
