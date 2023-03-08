@@ -1,16 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { Col, InputGroup, Input, Button } from 'reactstrap';
+import { Socket } from 'socket.io-client';
 
 type FromChatProps = {
-	socket: any;
+	socket: Socket;
 	username: string;
 	activeUserList: string;
 };
 
 function Typing(props: FromChatProps) {
-	const [socket, setSocket] = useState(props.socket);
-	const [username, setUsername] = useState(props.username);
-	const [message, setMessage] = useState('');
+	const [socket, setSocket] = useState<Socket>(props.socket);
+	const [username, setUsername] = useState<string>(props.username);
+	const [message, setMessage] = useState<string>('');
 
 	useMemo(() => {
 		setSocket(props.socket);

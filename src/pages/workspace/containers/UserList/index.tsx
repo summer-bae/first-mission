@@ -1,16 +1,19 @@
+import { publicRoomType } from '@models/chat/publicRoom';
 import React, { useState, useMemo, useEffect } from 'react';
+import { Socket } from 'socket.io-client';
+
 type FromChatProps = {
-	socket: any;
+	socket: Socket;
 	username: string;
-	allUsers: Array<any> | null;
+	allUsers: Array<publicRoomType> | null;
 	receiveActiveUser: (name: string) => void;
 };
 
 function UserList(props: FromChatProps) {
-	const [socket, setSocket] = useState(props.socket);
-	const [username, setUsername] = useState(props.username);
-	const [allUsers, setAllUsers] = useState(props.allUsers);
-	const [activeUserList, setActiveUserList] = useState('public');
+	const [socket, setSocket] = useState<Socket>(props.socket);
+	const [username, setUsername] = useState<string>(props.username);
+	const [allUsers, setAllUsers] = useState<Array<publicRoomType> | null>(props.allUsers);
+	const [activeUserList, setActiveUserList] = useState<string>('public');
 
 	useMemo(() => {
 		if (props.allUsers) {
@@ -48,7 +51,6 @@ function UserList(props: FromChatProps) {
 
 	useEffect(() => {
 		props.receiveActiveUser(activeUserList);
-		console.log('active ', activeUserList);
 		const from = username;
 		const to = activeUserList;
 		if (to === 'public') {

@@ -36,7 +36,7 @@ function ChatList(props) {
     function distinctMsg(item) {
         if (item.username != user) {
             // 내가 보낸 것이 아니라면
-            return (react_1.default.createElement("div", { className: "incoming_msg chat_content", key: item._id },
+            return (react_1.default.createElement("div", { className: "incoming_msg chat_content" },
                 react_1.default.createElement("div", { className: chatlist_module_css_1.default.received_msg },
                     react_1.default.createElement("div", { className: chatlist_module_css_1.default.received_withd_msg },
                         react_1.default.createElement("strong", null, item.username),
@@ -45,7 +45,7 @@ function ChatList(props) {
         }
         else {
             // 내가 보낸 것이라면
-            return (react_1.default.createElement("div", { className: "outgoing_msg chat_content", key: item._id },
+            return (react_1.default.createElement("div", { className: "outgoing_msg chat_content" },
                 react_1.default.createElement("div", { className: chatlist_module_css_1.default.sent_msg },
                     react_1.default.createElement("p", null, item.message),
                     react_1.default.createElement("span", { style: { color: '#cccccc', fontSize: 'x-small' } }, item.createdAt))));
@@ -58,9 +58,6 @@ function ChatList(props) {
             });
         }
     }
-    (0, react_1.useEffect)(() => {
-        console.log('!!', props);
-    }, []);
     (0, react_1.useMemo)(() => {
         if (props.allMessage) {
             setAllMessage(props.allMessage);
@@ -77,7 +74,6 @@ function ChatList(props) {
         }
     }, [props.type]);
     (0, react_1.useMemo)(() => {
-        console.log("USER CHANGE");
         if (props.username) {
             setUser(props.username);
         }

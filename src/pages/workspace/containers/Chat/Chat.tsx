@@ -5,21 +5,25 @@ import UserList from '../UserList';
 import ChatList from '../ChatList';
 import axios from 'axios';
 import style from './chat.module.css';
+import { publicRoomType } from '@models/chat/publicRoom';
+import { publicMessageType } from '@models/chat/publicMessage';
+import { privateMessageType } from '@models/chat/privateMessage';
+import { Socket } from 'socket.io-client'
 
 type ChatProps = {
-	socket: any;
+	socket: Socket;
 	username: string;
-	allUsers: Array<any> | null;
-	allMessage: Array<any> | null;
-	message: Array<any> | null;
+	allUsers: Array<publicRoomType> | null;
+	allMessage: Array<publicMessageType> | null;
+	message: Array<privateMessageType> | null;
 };
 
 function Chat(props: ChatProps) {
-	const [socket, setSocket] = useState(props.socket);
-	const [username, setUsername] = useState(props.username);
-	const [allUsers, setAllUsers] = useState(props.allUsers);
-	const [allMessage, setAllMessage] = useState(props.allMessage);
-	const [message, setMessage] = useState(props.message);
+	const socket = props.socket;
+	const [username, setUsername] = useState<string>(props.username);
+	const [allUsers, setAllUsers] = useState<Array<publicRoomType> | null>(props.allUsers);
+	const [allMessage, setAllMessage] = useState<Array<publicMessageType> | null>(props.allMessage);
+	const [message, setMessage] = useState<Array<privateMessageType> | null>(props.message);
 	const [activeUserList, setActiveUserList] = useState<string>('public');
 
 	// 마지막 메시지 스크롤 포커스
@@ -31,7 +35,7 @@ function Chat(props: ChatProps) {
 	}
 
 	useEffect(() => {
-		axios.get('/api/account/id').then(({ data }) => {
+		axios.get<string>('/api/account/id').then(({ data }) => {
 			setUsername(data);
 			socket.on('success public room', () => {
 				socket.emit('get all users');
@@ -44,7 +48,7 @@ function Chat(props: ChatProps) {
 	}, []);
 
 	useEffect(() => {
-		socket.on('public all message', (obj) => {
+		socket.on('public all message', (obj : Array<publicMessageType>) => {
 			setAllMessage(obj);
 		});
 
@@ -52,7 +56,7 @@ function Chat(props: ChatProps) {
 	}, [allMessage]);
 
 	useEffect(() => {
-		socket.on('private get message', (obj) => {
+		socket.on('private get message', (obj : Array<privateMessageType>) => {
 			setMessage(obj);
 		});
 
@@ -60,12 +64,12 @@ function Chat(props: ChatProps) {
 	}, [message]);
 
 	useEffect(() => {
-		socket.on('success get users', (allUsers) => {
+		socket.on('success get users', (allUsers : Array<publicRoomType>) => {
 			setAllUsers(allUsers);
 		});
 	}, [allUsers]);
 
-	function receiveActiveUser(activeUser : string):void {
+	function receiveActiveUser(activeUser: string): void {
 		setActiveUserList(activeUser);
 	}
 

@@ -59,7 +59,6 @@ function UserList(props) {
     }
     (0, react_1.useEffect)(() => {
         props.receiveActiveUser(activeUserList);
-        console.log('active ', activeUserList);
         const from = username;
         const to = activeUserList;
         if (to === 'public') {
