@@ -1,8 +1,7 @@
-export {};
+export { };
 
 declare global {
-    interface Window {
-        cloudinary: any;
-        gtag: (...args: any[]) => void;
-      }
+  interface Window {
+    __INITIAL_STATE__: any;
+  }
 }
