@@ -1,8 +1,11 @@
-const mongoose = require('mongoose');
-
-const schema = {
-	id: String,
-	pw: String
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-
-module.exports = mongoose.model('account', schema);
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = __importDefault(require("mongoose"));
+const schema = new mongoose_1.default.Schema({
+    id: String,
+    pw: String
+});
+exports.default = mongoose_1.default.model('account', schema);

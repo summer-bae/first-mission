@@ -33,8 +33,6 @@ function Chat(props: ChatProps) {
 	useEffect(() => {
 		axios.get('/api/account/id').then(({ data }) => {
 			setUsername(data);
-
-			socket.emit('enter public room', data);
 			socket.on('success public room', () => {
 				socket.emit('get all users');
 			});

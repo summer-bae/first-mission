@@ -4,8 +4,13 @@ import axios from 'axios';
 
 import style from './style.module.scss';
 import * as io from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 
 import Chat from '../Chat/Chat';
+
+import { publicRoomType } from '../../../../../models/chat/publicRoom';
+import { publicMessageType } from '../../../../../models/chat/publicMessage';
+import { privateMessageType } from '../../../../../models/chat/privateMessage';
 
 const newSocket = io.connect('', {
 	path: '/socket.io',
@@ -14,11 +19,13 @@ const newSocket = io.connect('', {
 
 function Header() {
 
-	const [socket, setSocket] = useState<any>(newSocket);
+	const [socket, setSocket] = useState<Socket>(newSocket);
 	const [username, setUsername] = useState<string>('');
-	const [allUsers, setAllUsers] = useState<Array<any> | null>(null);
-	const [allMessage, setAllMessage] = useState<Array<any> | null>(null);
-	const [message, setMessage] = useState<Array<any> | null>(null);
+	const [allUsers, setAllUsers] = useState<Array<publicRoomType> | null>(null);
+	const [allMessage, setAllMessage] = useState<Array<publicMessageType> | null>(null);
+	const [message, setMessage] = useState<Array<privateMessageType> | null>(null);
+
+	console.log(allUsers, allMessage);
 
 	useEffect(() => {
 		axios.get('/api/account/id').then(({ data }) => {

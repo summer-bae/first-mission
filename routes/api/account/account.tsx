@@ -104,7 +104,7 @@ router.get('/account/id', (req, res) => {
 
 router.post('/file/upload', async (req, res, next) => {
 	try {
-		upload(req, res, function (err) {
+		upload(req, res, function (err: any) {
 			if (err instanceof multer.MulterError) {
 				return next(err);
 			} else if (err) {

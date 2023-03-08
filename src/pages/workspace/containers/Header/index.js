@@ -42,6 +42,7 @@ function Header() {
     const [allUsers, setAllUsers] = (0, react_1.useState)(null);
     const [allMessage, setAllMessage] = (0, react_1.useState)(null);
     const [message, setMessage] = (0, react_1.useState)(null);
+    console.log(allUsers, allMessage);
     (0, react_1.useEffect)(() => {
         axios_1.default.get('/api/account/id').then(({ data }) => {
             setUsername(data);
