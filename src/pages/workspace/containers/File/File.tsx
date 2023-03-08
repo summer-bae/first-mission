@@ -5,7 +5,7 @@ import style from './file.module.css';
 
 import JSZip from 'jszip';
 
-function File() {
+function File(this: any) {
 	const [uploadFile, setUploadFile] = useState<any>('');
 	const [fileList, setFileList] = useState<any>([]);
 	const [selectFile, setSelectFile] = useState<string>('');
@@ -30,9 +30,12 @@ function File() {
 
 		if (file.name.substr(file.name.length - 3) === 'zip') {
 			reader.onload = (e) => {
-				JSZip.loadAsync(e.target.result).then((obj) => {
-					setFileList(Object.values(obj.files));
-				});
+				if (e && e.target && e.target.result) {
+					JSZip.loadAsync(e.target.result).then((obj) => {
+						setFileList(Object.values(obj.files));
+					});
+				}
+
 			};
 
 			reader.onerror = (e) => {

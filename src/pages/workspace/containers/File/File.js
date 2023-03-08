@@ -52,9 +52,11 @@ function File() {
         const reader = new FileReader();
         if (file.name.substr(file.name.length - 3) === 'zip') {
             reader.onload = (e) => {
-                jszip_1.default.loadAsync(e.target.result).then((obj) => {
-                    setFileList(Object.values(obj.files));
-                });
+                if (e && e.target && e.target.result) {
+                    jszip_1.default.loadAsync(e.target.result).then((obj) => {
+                        setFileList(Object.values(obj.files));
+                    });
+                }
             };
             reader.onerror = (e) => {
                 alert('file open error');
