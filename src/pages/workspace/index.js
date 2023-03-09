@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
-const Header_1 = __importDefault(require("./containers/Header"));
-const File_1 = __importDefault(require("./containers/File/File"));
+const Header_1 = __importDefault(require("./Header"));
+const File_1 = __importDefault(require("./File/File"));
 function Workspace() {
     return (react_1.default.createElement("div", null,
         react_1.default.createElement(Header_1.default, null),

@@ -8,9 +8,9 @@ import { Socket } from 'socket.io-client';
 
 import Chat from '../Chat/Chat';
 
-import { publicRoomType } from '../../../../../models/chat/publicRoom';
-import { publicMessageType } from '../../../../../models/chat/publicMessage';
-import { privateMessageType } from '../../../../../models/chat/privateMessage';
+import { publicRoomType } from '../../../../models/chat/publicRoom';
+import { publicMessageType } from '../../../../models/chat/publicMessage';
+import { privateMessageType } from '../../../../models/chat/privateMessage';
 
 const newSocket = io.connect('', {
 	path: '/socket.io',

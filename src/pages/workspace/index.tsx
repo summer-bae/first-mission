@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Header from './containers/Header';
-import File from './containers/File/File';
+import Header from './Header';
+import File from './File/File';
 
 function Workspace() {
 	return (
