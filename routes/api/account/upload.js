@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
 const storage = multer_1.default.diskStorage({
-    destination: function (req, file, cb) {
+    destination: function (_req, _file, cb) {
         cb(null, 'src/files/');
     },
     filename: function (req, file, cb) {

@@ -141,7 +141,7 @@ router.post('/file/upload', async (req, res, next) => {
 	}
 });
 
-router.get('/file/contents', async (req, res, next) => {
+router.get('/file/contents', async (req, res, _next) => {
 	try {
 		const contents = fs.readFileSync(
 			'../upload/' + req.session.user.id + '/' + req.query.filename,
@@ -153,7 +153,7 @@ router.get('/file/contents', async (req, res, next) => {
 	}
 });
 
-router.post('/file/contents', async (req, res, next) => {
+router.post('/file/contents', async (req, res, _next) => {
 	try {
 		const { filename, contents } = req.body;
 
