@@ -9,7 +9,7 @@ import AdmZip from 'adm-zip';
 import fs from 'fs';
 import rimraf from 'rimraf';
 import tar from 'tar-fs';
-
+import path from 'path';
 import { upload } from './upload';
 
 declare module 'express-session' {
@@ -101,48 +101,46 @@ router.get('/account/id', (req, res) => {
 	console.log(req.session && req.session.user && req.session.user.id);
 });
 
-// isMember middlewares
 router.post('/file/upload', async (req, res, next) => {
 	try {
-		upload(req, res, function (err: any) {
+		upload(req, res, function (err) {
 			if (err instanceof multer.MulterError) {
-				return next(err);
+				console.log(err);
+				return res.json(false);
 			} else if (err) {
-				return next(err);
+				console.log(err);
+				return res.json(false);
 			}
 
 			const filePath = req.file?.path;
 
-			if (filePath?.split('.')[1] === 'zip') {
-				const zip = new AdmZip(filePath);
-				const target = './routes/api/upload/' + req.session.user.id;
-				console.log('!!', target);
-				// rimraf.sync(target);
-				zip.extractAllTo(target, true);
-
-				return res.json(true);
-			} else {
-				const target = './routes/api/upload/' + req.session.user.id;
-				// rimraf.sync(target);
-				if (typeof filePath === 'string') {
-					const t = fs.createReadStream(filePath).pipe(
-						tar.extract(target, {
-							readable: true, // all dirs and files should be readable
-							writable: true, // all dirs and files should be writable
-						}),
-					);
-				}
-
-				return res.json(true);
-			}
+			const zip = new AdmZip(filePath);
+			const target = './routes/api/upload/' + req.session.user.id;
+			// rimraf.sync(target);
+			zip.extractAllTo(target, true);
+			rimraf.sync(
+				'./routes/api/upload/' + req.session.user.id + '/__MACOSX',
+			);
+			return res.json(true);
 		});
 	} catch (err) {
 		console.log(err);
 	}
 });
 
+function isPathAllowed(allowedPaths, filepath) {
+	// get the absolute path of the filepath
+	const absolutePath = path.resolve(filepath);
+
+	// check if the absolute path starts with any of the allowed paths
+	return allowedPaths.some((allowedPath) =>
+		absolutePath.startsWith(allowedPath),
+	);
+}
+
 router.get('/file/contents', async (req, res, _next) => {
 	try {
+		rimraf.sync('./routes/api/upload/' + req.session.user.id + '/__MACOSX');
 		const contents = fs.readFileSync(
 			'./routes/api/upload/' +
 				req.session.user.id +

@@ -38,34 +38,45 @@ function File() {
     const [contents, setContents] = (0, react_1.useState)('편집할 파일을 선택해주세요');
     function handlerFileUpload(e) {
         const fileInfo = e.target.files[0];
-        const fileName = fileInfo.name.substr(fileInfo.name.length - 3);
-        if (['zip', 'tar'].includes(fileName)) {
-            setUploadFile(fileInfo);
-            setSelectFile('');
+        const fileName = fileInfo.name.split('.').reverse()[0];
+        if (fileName === 'zip') {
+            if (fileInfo.size > 1024 * 1024) {
+                e.target.value = '';
+                alert('🚨 올릴 수 있는 .zip파일의 용량은 1MB 미만입니다');
+                setUploadFile('');
+                setContents('편집할 파일을 선택해주세요');
+                setSelectFile('');
+                setFileList([]);
+            }
+            else {
+                console.log(fileInfo);
+                setUploadFile(fileInfo);
+                setSelectFile('');
+                setFileList([]);
+            }
         }
         else {
             e.target.value = '';
-            alert('.zip, .tar 확장자만 업로드 할 수 있습니다');
+            alert('.zip 확장자만 업로드 할 수 있습니다');
+            setUploadFile('');
+            setContents('편집할 파일을 선택해주세요');
+            setSelectFile('');
         }
     }
-    function getFileList(e) {
+    function getFileList(_e) {
         const file = uploadFile;
         const reader = new FileReader();
-        if (file.name.substr(file.name.length - 3) === 'zip') {
-            reader.onload = (e) => {
-                if (e && e.target && e.target.result) {
-                    jszip_1.default.loadAsync(e.target.result).then((obj) => {
-                        setFileList(Object.values(obj.files));
-                    });
-                }
-            };
-            reader.onerror = (e) => {
-                alert('file open error');
-            };
-            reader.readAsArrayBuffer(file);
-        }
-        else {
-        }
+        reader.onload = (e) => {
+            if (e && e.target && e.target.result) {
+                jszip_1.default.loadAsync(e.target.result).then((obj) => {
+                    setFileList(Object.values(obj.files));
+                });
+            }
+        };
+        reader.onerror = (_e) => {
+            alert('file open error');
+        };
+        reader.readAsArrayBuffer(file);
     }
     function handlerFileSubmit(e) {
         if (!uploadFile) {
@@ -93,7 +104,7 @@ function File() {
     function handlerChangeContents(e) {
         setContents(e.target.value);
     }
-    function handlerSaveContents(e) {
+    function handlerSaveContents(_e) {
         if (selectFile) {
             axios_1.default
                 .post('api/file/contents', {
@@ -108,20 +119,23 @@ function File() {
             });
         }
     }
-    function handlerDirClick(e) {
+    function handlerDirClick(_e) {
         alert('폴더는 편집할 수 없습니다');
     }
-    // render() {
     let rootFileName = uploadFile.name;
     if (rootFileName) {
         rootFileName = rootFileName.substr(0, rootFileName.length - 4) + '/';
     }
-    const fileListComponent = fileList.map((item, idx) => {
+    const fileListComponent = fileList.map((item, _idx) => {
         if (selectFile === item.name) {
-            return (react_1.default.createElement("li", { className: file_module_css_1.default.select, onClick: item.dir ? handlerDirClick : handlerFileClick.bind(this, item.name) }, item.name));
+            return (react_1.default.createElement("li", { className: file_module_css_1.default.select, onClick: item.dir
+                    ? handlerDirClick
+                    : handlerFileClick.bind(this, item.name) }, item.name));
         }
         else {
-            return (react_1.default.createElement("li", { className: file_module_css_1.default.noselect, onClick: item.dir ? handlerDirClick : handlerFileClick.bind(this, item.name) }, item.name));
+            return (react_1.default.createElement("li", { className: file_module_css_1.default.noselect, onClick: item.dir
+                    ? handlerDirClick
+                    : handlerFileClick.bind(this, item.name) }, item.name));
         }
     });
     return (react_1.default.createElement("div", { className: file_module_css_1.default.file_wrapper },
@@ -129,10 +143,11 @@ function File() {
             react_1.default.createElement("input", { type: "file", name: "file", id: file_module_css_1.default.w, onChange: handlerFileUpload }),
             react_1.default.createElement("button", { type: "button", className: "btn btn-link", onClick: handlerFileSubmit }, "\uC5C5\uB85C\uB4DC")),
         react_1.default.createElement("div", { className: file_module_css_1.default.file_list },
-            react_1.default.createElement("ul", null, fileListComponent ? fileListComponent : '업로드를 해주세요')),
+            react_1.default.createElement("ul", null, fileListComponent
+                ? fileListComponent
+                : '업로드를 해주세요')),
         react_1.default.createElement("div", { className: file_module_css_1.default.file_textEdit },
             react_1.default.createElement("textarea", { rows: 10, cols: 60, value: contents, onChange: handlerChangeContents }),
             react_1.default.createElement("button", { className: "btn btn-primary", onClick: handlerSaveContents }, "\uC800\uC7A5"))));
-    // }
 }
 exports.default = File;

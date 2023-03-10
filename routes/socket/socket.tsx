@@ -8,6 +8,7 @@ import PublicRoom from '../../models/chat/publicRoom';
 import PrivateMessage from '../../models/chat/privateMessage';
 import PublicMessage from '../../models/chat/publicMessage';
 import moment from 'moment-timezone';
+import session from 'express-session';
 
 moment.tz.setDefault('Asia/Seoul');
 

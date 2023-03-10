@@ -10,7 +10,10 @@ const storage = multer_1.default.diskStorage({
         cb(null, 'src/files/');
     },
     filename: function (req, file, cb) {
-        cb(null, req.session.user.id + "_" + file.originalname);
-    }
+        cb(null, req.session.user.id + '_' + file.originalname);
+    },
 });
-exports.upload = (0, multer_1.default)({ storage: storage }).single("file");
+exports.upload = (0, multer_1.default)({
+    storage: storage,
+    limits: { fileSize: 1024 * 1024 },
+}).single('file');
