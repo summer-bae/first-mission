@@ -5,6 +5,7 @@ import style from './file.module.css';
 
 import JSZip from 'jszip';
 
+// textarea 수정 해보기
 function File(this: any) {
 	const [uploadFile, setUploadFile] = useState<any>('');
 	const [fileList, setFileList] = useState<any>([]);

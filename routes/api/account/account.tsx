@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 const router: Router = express.Router();
-import session from "express-session";
+import session from 'express-session';
 import modAccount from '../../../models/account/account';
 import * as util from './util';
 import Error from '../util/error';
@@ -14,7 +14,7 @@ import { upload } from './upload';
 
 declare module 'express-session' {
 	export interface SessionData {
-		user: any
+		user: any;
 	}
 }
 
@@ -23,11 +23,10 @@ async function findById(id: string) {
 	return accountInfo;
 }
 
-
 async function isExistsById(id: string) {
 	const accountInfo = await findById(id);
 	return !!accountInfo;
-};
+}
 
 async function isExistsAccountInfo(id: string, pw: string) {
 	if (!id || !pw) {
@@ -45,7 +44,7 @@ async function isExistsAccountInfo(id: string, pw: string) {
 	}
 
 	return true;
-};
+}
 
 async function add(id: string, pw: string) {
 	if (!id || !pw) {
@@ -63,7 +62,7 @@ async function add(id: string, pw: string) {
 
 	await newAccountInfo.save();
 	return true;
-};
+}
 
 router.post('/account/signup', async (req, res, next) => {
 	try {
@@ -102,6 +101,7 @@ router.get('/account/id', (req, res) => {
 	console.log(req.session && req.session.user && req.session.user.id);
 });
 
+// isMember middlewares
 router.post('/file/upload', async (req, res, next) => {
 	try {
 		upload(req, res, function (err: any) {
@@ -115,21 +115,21 @@ router.post('/file/upload', async (req, res, next) => {
 
 			if (filePath?.split('.')[1] === 'zip') {
 				const zip = new AdmZip(filePath);
-				const target = '../upload/' + req.session.user.id;
-
-				rimraf.sync(target);
+				const target = './routes/api/upload/' + req.session.user.id;
+				console.log('!!', target);
+				// rimraf.sync(target);
 				zip.extractAllTo(target, true);
 
 				return res.json(true);
 			} else {
-				const target = '../upload/' + req.session.user.id;
-				rimraf.sync(target);
+				const target = './routes/api/upload/' + req.session.user.id;
+				// rimraf.sync(target);
 				if (typeof filePath === 'string') {
 					const t = fs.createReadStream(filePath).pipe(
 						tar.extract(target, {
 							readable: true, // all dirs and files should be readable
 							writable: true, // all dirs and files should be writable
-						})
+						}),
 					);
 				}
 
@@ -144,8 +144,11 @@ router.post('/file/upload', async (req, res, next) => {
 router.get('/file/contents', async (req, res, _next) => {
 	try {
 		const contents = fs.readFileSync(
-			'../upload/' + req.session.user.id + '/' + req.query.filename,
-			'utf8'
+			'./routes/api/upload/' +
+				req.session.user.id +
+				'/' +
+				req.query.filename,
+			'utf8',
 		);
 		res.send(contents);
 	} catch (err) {
@@ -158,7 +161,7 @@ router.post('/file/contents', async (req, res, _next) => {
 		const { filename, contents } = req.body;
 
 		fs.writeFileSync(
-			'../upload/' + req.session.user.id + '/' + filename,
+			'./routes/api/upload/' + req.session.user.id + '/' + filename,
 			contents,
 			'utf8',
 		);

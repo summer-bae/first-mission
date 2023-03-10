@@ -18,6 +18,7 @@ type ChatProps = {
 	message: Array<privateMessageType> | null;
 };
 
+// 전체 채팅 다시 불러오는 거 비효율
 function Chat(props: ChatProps) {
 	const socket = props.socket;
 	const [username, setUsername] = useState<string>(props.username);

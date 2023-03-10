@@ -26,8 +26,8 @@ module.exports = (server) => {
                         if (err)
                             throw err;
                         if (!participant) {
-                            //참여자 정보가 없다면 publicRoom에 참여자로 저장
-                            console.log("no part");
+                            // 참여자 정보가 없다면 publicRoom에 참여자로 저장
+                            console.log('no part');
                             const publicRoom = new publicRoom_1.default({
                                 username: username,
                                 socketId: socket.id,
@@ -44,7 +44,7 @@ module.exports = (server) => {
                         else {
                             // 이력만 남아있거나 페이지 새로고침 했을 경우
                             // 이후 동일하게 새롭게 로그인한 socket에 id를 저장하고 알림
-                            console.log("par");
+                            console.log('par');
                             participant.socketId = socket.id;
                             participant.createdAt = (0, moment_timezone_1.default)().format('YYYY-MM-DD HH:mm:ss');
                             participant.save((err) => {
@@ -65,7 +65,6 @@ module.exports = (server) => {
                 io.emit('success get users', user);
             });
         }
-        ;
         // 참여자 목록
         socket.on('get all users', () => {
             getClientList();
@@ -99,7 +98,9 @@ module.exports = (server) => {
                                             throw err;
                                         else {
                                             publicMessage_1.default.find({})
-                                                .sort({ createdAt: 'asc' })
+                                                .sort({
+                                                createdAt: 'asc',
+                                            })
                                                 .exec((err, messages) => {
                                                 if (err)
                                                     throw err;
@@ -139,7 +140,10 @@ module.exports = (server) => {
         // 귓속말 채팅 보내기
         socket.on('private send message', (from, to, msg) => {
             // 두 유저가 존재하는 유저인지 확인
-            Promise.all([account_1.default.findOne({ id: from }), account_1.default.findOne({ id: to })])
+            Promise.all([
+                account_1.default.findOne({ id: from }),
+                account_1.default.findOne({ id: to }),
+            ])
                 .then((users) => {
                 const [fromUser, toUser] = users;
                 if (fromUser !== null && toUser !== 0) {
@@ -164,7 +168,8 @@ module.exports = (server) => {
                                 account_1.default.findOne({ id: to }),
                             ]).then((users) => {
                                 const [fromUser, toUser] = users;
-                                if (fromUser !== null && toUser !== null) {
+                                if (fromUser !== null &&
+                                    toUser !== null) {
                                     // 존재하는 유저라면
                                     Promise.all([
                                         privateMessage_1.default.find({
@@ -177,12 +182,19 @@ module.exports = (server) => {
                                         }),
                                     ]).then((messages) => {
                                         const [fromMsg, toMsg] = messages;
-                                        const message = [...fromMsg, ...toMsg];
+                                        const message = [
+                                            ...fromMsg,
+                                            ...toMsg,
+                                        ];
                                         const dateSort = (a, b) => {
-                                            if (a.createdAt == b.createdAt) {
+                                            if (a.createdAt ==
+                                                b.createdAt) {
                                                 return 0;
                                             }
-                                            return a.createdAt <= b.createdAt ? -1 : 1;
+                                            return a.createdAt <=
+                                                b.createdAt
+                                                ? -1
+                                                : 1;
                                         };
                                         message.sort(dateSort);
                                         io.to(socket.id).emit('private get message', message);
@@ -209,13 +221,22 @@ module.exports = (server) => {
         socket.on('get private message', (from, to) => {
             console.log('get private!');
             // 존재하는 유저인지 파악
-            Promise.all([account_1.default.findOne({ id: from }), account_1.default.findOne({ id: to })]).then((users) => {
+            Promise.all([
+                account_1.default.findOne({ id: from }),
+                account_1.default.findOne({ id: to }),
+            ]).then((users) => {
                 const [fromUser, toUser] = users;
                 if (fromUser !== null && toUser !== null) {
                     // 존재하는 유저라면
                     Promise.all([
-                        privateMessage_1.default.find({ sender: fromUser._id, receiver: toUser._id }),
-                        privateMessage_1.default.find({ sender: toUser._id, receiver: fromUser._id }),
+                        privateMessage_1.default.find({
+                            sender: fromUser._id,
+                            receiver: toUser._id,
+                        }),
+                        privateMessage_1.default.find({
+                            sender: toUser._id,
+                            receiver: fromUser._id,
+                        }),
                     ]).then((messages) => {
                         const [fromMsg, toMsg] = messages;
                         const message = [...fromMsg, ...toMsg];

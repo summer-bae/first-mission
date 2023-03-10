@@ -30,6 +30,7 @@ const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
 const file_module_css_1 = __importDefault(require("./file.module.css"));
 const jszip_1 = __importDefault(require("jszip"));
+// textarea 수정 해보기
 function File() {
     const [uploadFile, setUploadFile] = (0, react_1.useState)('');
     const [fileList, setFileList] = (0, react_1.useState)([]);

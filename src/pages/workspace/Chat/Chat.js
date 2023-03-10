@@ -33,6 +33,7 @@ const UserList_1 = __importDefault(require("../UserList"));
 const ChatList_1 = __importDefault(require("../ChatList"));
 const axios_1 = __importDefault(require("axios"));
 const chat_module_css_1 = __importDefault(require("./chat.module.css"));
+// 전체 채팅 다시 불러오는 거 비효율
 function Chat(props) {
     const socket = props.socket;
     const [username, setUsername] = (0, react_1.useState)(props.username);
