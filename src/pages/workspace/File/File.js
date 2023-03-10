@@ -30,12 +30,15 @@ const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
 const file_module_css_1 = __importDefault(require("./file.module.css"));
 const jszip_1 = __importDefault(require("jszip"));
+require("react-sortable-tree/style.css");
+const FileTree_1 = __importDefault(require("../FileTree/FileTree"));
 // textarea 수정 해보기
 function File() {
     const [uploadFile, setUploadFile] = (0, react_1.useState)('');
     const [fileList, setFileList] = (0, react_1.useState)([]);
     const [selectFile, setSelectFile] = (0, react_1.useState)('');
     const [contents, setContents] = (0, react_1.useState)('편집할 파일을 선택해주세요');
+    const [treeList, setTreeList] = (0, react_1.useState)([]);
     function handlerFileUpload(e) {
         const fileInfo = e.target.files[0];
         const fileName = fileInfo.name.split('.').reverse()[0];
@@ -78,6 +81,9 @@ function File() {
         };
         reader.readAsArrayBuffer(file);
     }
+    (0, react_1.useEffect)(() => {
+        console.log(fileList);
+    }, [fileList]);
     function handlerFileSubmit(e) {
         if (!uploadFile) {
             alert('파일을 선택해주세요');
@@ -124,8 +130,16 @@ function File() {
     }
     let rootFileName = uploadFile.name;
     if (rootFileName) {
-        rootFileName = rootFileName.substr(0, rootFileName.length - 4) + '/';
+        rootFileName = rootFileName.substring(0, rootFileName.length - 4);
     }
+    const files = fileList.map((item) => {
+        if (treeList) {
+            treeList.push({
+                name: item.name,
+                size: item.size,
+            });
+        }
+    });
     const fileListComponent = fileList.map((item, _idx) => {
         if (selectFile === item.name) {
             return (react_1.default.createElement("li", { className: file_module_css_1.default.select, onClick: item.dir
@@ -148,6 +162,7 @@ function File() {
                 : '업로드를 해주세요')),
         react_1.default.createElement("div", { className: file_module_css_1.default.file_textEdit },
             react_1.default.createElement("textarea", { rows: 10, cols: 60, value: contents, onChange: handlerChangeContents }),
-            react_1.default.createElement("button", { className: "btn btn-primary", onClick: handlerSaveContents }, "\uC800\uC7A5"))));
+            react_1.default.createElement("button", { className: "btn btn-primary", onClick: handlerSaveContents }, "\uC800\uC7A5")),
+        react_1.default.createElement(FileTree_1.default, { files: treeList, rootFileName: rootFileName })));
 }
 exports.default = File;

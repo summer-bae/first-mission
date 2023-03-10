@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import style from './file.module.css';
 
 import JSZip from 'jszip';
+import SortableTree from 'react-sortable-tree';
+import 'react-sortable-tree/style.css';
+import FileTree from '../FileTree/FileTree';
 
 // textarea 수정 해보기
 function File(this: any) {
@@ -12,6 +15,7 @@ function File(this: any) {
 	const [selectFile, setSelectFile] = useState<string>('');
 	const [contents, setContents] =
 		useState<string>('편집할 파일을 선택해주세요');
+	const [treeList, setTreeList] = useState<Array<any>>([]);
 
 	function handlerFileUpload(e) {
 		const fileInfo = e.target.files[0];
@@ -58,6 +62,10 @@ function File(this: any) {
 
 		reader.readAsArrayBuffer(file);
 	}
+
+	useEffect(() => {
+		console.log(fileList);
+	}, [fileList]);
 
 	function handlerFileSubmit(e) {
 		if (!uploadFile) {
@@ -115,8 +123,32 @@ function File(this: any) {
 
 	let rootFileName = uploadFile.name;
 	if (rootFileName) {
-		rootFileName = rootFileName.substr(0, rootFileName.length - 4) + '/';
+		rootFileName = rootFileName.substring(0, rootFileName.length - 4);
 	}
+
+	const files = fileList.map(
+		(item: {
+			name:
+				| string
+				| number
+				| boolean
+				| React.ReactElement<
+						any,
+						string | React.JSXElementConstructor<any>
+				  >
+				| React.ReactFragment
+				| null
+				| undefined;
+			size: any;
+		}) => {
+			if (treeList) {
+				treeList.push({
+					name: item.name,
+					size: item.size,
+				});
+			}
+		},
+	);
 
 	const fileListComponent = fileList.map(
 		(
@@ -204,6 +236,7 @@ function File(this: any) {
 					저장
 				</button>
 			</div>
+			<FileTree files={treeList} rootFileName={rootFileName} />
 		</div>
 	);
 }
