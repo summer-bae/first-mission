@@ -1,30 +1,40 @@
 import { publicMessageType } from '@models/chat/publicMessage';
 import { publicRoomType } from '@models/chat/publicRoom';
 
-import socketIo, { Socket, Server } from 'socket.io';
-
+import { Server, ServerOptions, Handshake } from 'socket.io';
 import User from '../../models/account/account';
 import PublicRoom from '../../models/chat/publicRoom';
 import PrivateMessage from '../../models/chat/privateMessage';
 import PublicMessage from '../../models/chat/publicMessage';
 import moment from 'moment-timezone';
-import session from 'express-session';
+// import session from 'express-session';
+
+const sharedSession = require('express-socket.io-session');
 
 moment.tz.setDefault('Asia/Seoul');
 
-module.exports = (server: any) => {
-	const io = new Server<any>(server);
-	io.on('connection', (socket: Socket) => {
+interface CustomHandshake extends Handshake {
+	session: any;
+}
+  
+module.exports = (server, useSession, redisClient) => {
+
+	const io = new Server(server);
+	io.use(sharedSession(useSession(redisClient)));
+
+	io.on('connection', (socket) => {
+		
+		const customHandshake = socket.handshake as unknown as CustomHandshake;
 		console.log('new connection', socket.id);
 
-		socket.on('enter public room', (username: string) => {
-			User.findOne({ id: username }, (err: any, user: { _id: any }) => {
+		socket.on('enter public room', () => {
+			User.findOne({ id: customHandshake.session.user.id }, (err: any, user: { _id: any }) => {
 				if (err) throw err;
 				if (!user) {
 					console.log('존재하는 유저가 아닙니다.');
 				} else {
 					PublicRoom.findOne(
-						{ username: username },
+						{ username: customHandshake.session.user.id },
 						(
 							err: any,
 							participant: {
@@ -38,7 +48,7 @@ module.exports = (server: any) => {
 								// 참여자 정보가 없다면 publicRoom에 참여자로 저장
 								console.log('no part');
 								const publicRoom = new PublicRoom({
-									username: username,
+									username: customHandshake.session.user.id,
 									socketId: socket.id,
 									userId: user._id,
 									createdAt: moment().format(
@@ -85,20 +95,20 @@ module.exports = (server: any) => {
 		});
 
 		// 클라이언트에게 전체 메시지를 받으면
-		socket.on('public send message', (username: string, msg: string) => {
-			console.log(username, msg);
-			User.findOne({ id: username }, (err: any, user: { _id: any }) => {
+		socket.on('public send message', (msg: string) => {
+			console.log(customHandshake.session.user.id, msg);
+			User.findOne({ id: customHandshake.session.user.id }, (err: any, user: { _id: any }) => {
 				if (err) throw err;
 				else {
 					PublicRoom.findOne(
-						{ username: username },
+						{ username: customHandshake.session.user.id },
 						(err: any, participant: publicRoomType) => {
 							if (err) throw err;
 							else {
 								// 전체 채팅 내용 저장
 								const publicMessage = new PublicMessage({
 									sender: user._id,
-									username: username,
+									username: customHandshake.session.user.id,
 									message: msg,
 									createdAt: moment().format(
 										'YYYY-MM-DD HH:mm:ss',
@@ -114,7 +124,7 @@ module.exports = (server: any) => {
 										);
 										// 채팅 내용이 저장 됐다면
 										PublicRoom.findOne(
-											{ username: username },
+											{ username: customHandshake.session.user.id },
 											(
 												err: any,
 												user: publicRoomType,
@@ -158,11 +168,11 @@ module.exports = (server: any) => {
 		});
 
 		// 전체 채팅 내용
-		socket.on('get public message', (username: string) => {
-			console.log('get public message!', username);
+		socket.on('get public message', () => {
+			console.log('get public message!', customHandshake.session.user.id);
 			// 요청한 사용자의 socket id검색
 			PublicRoom.findOne(
-				{ username: username },
+				{ username: customHandshake.session.user.id },
 				(err: any, user: publicRoomType) => {
 					if (err) throw err;
 					else {
@@ -185,10 +195,10 @@ module.exports = (server: any) => {
 		// 귓속말 채팅 보내기
 		socket.on(
 			'private send message',
-			(from: string, to: string, msg: string) => {
+			(to: string, msg: string) => {
 				// 두 유저가 존재하는 유저인지 확인
 				Promise.all([
-					User.findOne({ id: from }),
+					User.findOne({ id: customHandshake.session.user.id }),
 					User.findOne({ id: to }),
 				])
 					.then((users) => {
@@ -197,7 +207,7 @@ module.exports = (server: any) => {
 							//두 유저가 존재한다면
 							const privateMessage = new PrivateMessage({
 								sender: fromUser._id,
-								username: from,
+								username: customHandshake.session.user.id,
 								message: msg,
 								receiver: toUser._id,
 								receiverName: to,
@@ -212,7 +222,7 @@ module.exports = (server: any) => {
 									// 저장이 완료되면 귓속말 보내기
 									console.log('send private!');
 									Promise.all([
-										User.findOne({ id: from }),
+										User.findOne({ id: customHandshake.session.user.id }),
 										User.findOne({ id: to }),
 									]).then((users) => {
 										const [fromUser, toUser] = users;

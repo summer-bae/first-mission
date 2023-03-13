@@ -126,29 +126,31 @@ function File(this: any) {
 		rootFileName = rootFileName.substring(0, rootFileName.length - 4);
 	}
 
-	const files = fileList.map(
-		(item: {
-			name:
-				| string
-				| number
-				| boolean
-				| React.ReactElement<
-						any,
-						string | React.JSXElementConstructor<any>
-				  >
-				| React.ReactFragment
-				| null
-				| undefined;
-			size: any;
-		}) => {
-			if (treeList) {
-				treeList.push({
-					name: item.name,
-					size: item.size,
-				});
-			}
-		},
-	);
+	useEffect(() => {
+		fileList.map(
+			(item: {
+				name:
+					| string
+					| number
+					| boolean
+					| React.ReactElement<
+							any,
+							string | React.JSXElementConstructor<any>
+					  >
+					| React.ReactFragment
+					| null
+					| undefined;
+				size: any;
+			}) => {
+				if (treeList) {
+					treeList.push({
+						name: item.name,
+						size: item.size,
+					});
+				}
+			},
+		);
+	}, [fileList]);
 
 	const fileListComponent = fileList.map(
 		(

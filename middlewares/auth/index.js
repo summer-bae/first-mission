@@ -1,6 +1,7 @@
-const isMember = session => session && session.user && session.user.id;
+const isMember = (session) => session && session.user && session.user.id;
 
 exports.isMember = (req, res, next) => {
+	console.log('isMember', req.session);
 	if (isMember(req.session)) {
 		next();
 		return;
@@ -9,6 +10,7 @@ exports.isMember = (req, res, next) => {
 };
 
 exports.isNotMember = (req, res, next) => {
+	console.log('isNotMember', req.session);
 	if (isMember(req.session)) {
 		res.redirect('workspace');
 		return;

@@ -44,16 +44,15 @@ function Typing(props) {
     }
     function massageSendHandler() {
         if (message.length > 0) {
-            const from = username;
             const to = document.getElementsByClassName('list-group-item active')[0].id;
             const msg = message;
             if (to === 'public') {
                 // 전체 채팅 전송
-                socket.emit('public send message', from, msg);
+                socket.emit('public send message', msg);
             }
             else {
                 // 귓속말 전송
-                socket.emit('private send message', from, to, msg);
+                socket.emit('private send message', to, msg);
             }
             setMessage('');
         }

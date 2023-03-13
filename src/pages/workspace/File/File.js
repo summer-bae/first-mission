@@ -132,14 +132,16 @@ function File() {
     if (rootFileName) {
         rootFileName = rootFileName.substring(0, rootFileName.length - 4);
     }
-    const files = fileList.map((item) => {
-        if (treeList) {
-            treeList.push({
-                name: item.name,
-                size: item.size,
-            });
-        }
-    });
+    (0, react_1.useEffect)(() => {
+        fileList.map((item) => {
+            if (treeList) {
+                treeList.push({
+                    name: item.name,
+                    size: item.size,
+                });
+            }
+        });
+    }, [fileList]);
     const fileListComponent = fileList.map((item, _idx) => {
         if (selectFile === item.name) {
             return (react_1.default.createElement("li", { className: file_module_css_1.default.select, onClick: item.dir

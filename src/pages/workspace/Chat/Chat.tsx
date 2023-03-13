@@ -42,7 +42,7 @@ function Chat(props: ChatProps) {
 				socket.emit('get all users');
 			});
 
-			socket.emit('get public message', data);
+			socket.emit('get public message');
 		});
 
 		lastLineFocus();
