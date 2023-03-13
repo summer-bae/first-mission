@@ -12,7 +12,9 @@ type FromChatProps = {
 function UserList(props: FromChatProps) {
 	const [socket, setSocket] = useState<Socket>(props.socket);
 	const [username, setUsername] = useState<string>(props.username);
-	const [allUsers, setAllUsers] = useState<Array<publicRoomType> | null>(props.allUsers);
+	const [allUsers, setAllUsers] = useState<Array<publicRoomType> | null>(
+		props.allUsers,
+	);
 	const [activeUserList, setActiveUserList] = useState<string>('public');
 
 	useMemo(() => {
@@ -37,7 +39,9 @@ function UserList(props: FromChatProps) {
 
 	// 유리 리스트 클릭이벤트
 	function userListClickHandler(e) {
-		const beforeActiveTag = document.getElementsByClassName('list-group-item active')[0];
+		const beforeActiveTag = document.getElementsByClassName(
+			'list-group-item active',
+		)[0];
 		if (beforeActiveTag) {
 			const afterActiveTag = e.target;
 			if (afterActiveTag.id !== activeUserList) {
@@ -58,7 +62,13 @@ function UserList(props: FromChatProps) {
 			socket.emit('get public message', from);
 		} else {
 			// from 과 to의 채팅 가져오기
-			socket.emit('get private message', from, to);
+			if (from <= to) {
+				socket.emit('join', from + to);
+			} else {
+				socket.emit('join', to + from);
+			}
+
+			socket.emit('get private message', to);
 		}
 	}, [activeUserList]);
 

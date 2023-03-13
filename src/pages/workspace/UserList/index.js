@@ -67,7 +67,13 @@ function UserList(props) {
         }
         else {
             // from 과 to의 채팅 가져오기
-            socket.emit('get private message', from, to);
+            if (from <= to) {
+                socket.emit('join', from + to);
+            }
+            else {
+                socket.emit('join', to + from);
+            }
+            socket.emit('get private message', to);
         }
     }, [activeUserList]);
     // 유저리스트 동적 생성

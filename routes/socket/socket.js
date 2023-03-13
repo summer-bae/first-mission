@@ -17,6 +17,7 @@ module.exports = (server, useSession, redisClient) => {
     io.use(sharedSession(useSession(redisClient)));
     io.on('connection', (socket) => {
         const customHandshake = socket.handshake;
+        console.log(customHandshake.session);
         console.log('new connection', socket.id);
         socket.on('enter public room', () => {
             account_1.default.findOne({ id: customHandshake.session.user.id }, (err, user) => {
@@ -61,6 +62,17 @@ module.exports = (server, useSession, redisClient) => {
                 }
             });
         });
+        socket.on('join', (roomId) => {
+            socket.join(roomId);
+            console.log('JOIN');
+            for (let id of socket.rooms) {
+                console.log('ID!!', id);
+                if (id !== socket.id && id !== roomId) {
+                    console.log('SOCKET LEAVE', id);
+                    socket.leave(id);
+                }
+            }
+        });
         // 전체 유저 리스트
         function getClientList() {
             publicRoom_1.default.find({}).exec((err, user) => {
@@ -97,7 +109,10 @@ module.exports = (server, useSession, redisClient) => {
                                 else {
                                     console.log('public send message!', msg);
                                     // 채팅 내용이 저장 됐다면
-                                    publicRoom_1.default.findOne({ username: customHandshake.session.user.id }, (err, user) => {
+                                    publicRoom_1.default.findOne({
+                                        username: customHandshake.session
+                                            .user.id,
+                                    }, (err, user) => {
                                         if (err)
                                             throw err;
                                         else {
@@ -168,12 +183,13 @@ module.exports = (server, useSession, redisClient) => {
                             // 저장이 완료되면 귓속말 보내기
                             console.log('send private!');
                             Promise.all([
-                                account_1.default.findOne({ id: customHandshake.session.user.id }),
+                                account_1.default.findOne({
+                                    id: customHandshake.session.user.id,
+                                }),
                                 account_1.default.findOne({ id: to }),
                             ]).then((users) => {
                                 const [fromUser, toUser] = users;
-                                if (fromUser !== null &&
-                                    toUser !== null) {
+                                if (fromUser !== null && toUser !== null) {
                                     // 존재하는 유저라면
                                     Promise.all([
                                         privateMessage_1.default.find({
@@ -191,8 +207,7 @@ module.exports = (server, useSession, redisClient) => {
                                             ...toMsg,
                                         ];
                                         const dateSort = (a, b) => {
-                                            if (a.createdAt ==
-                                                b.createdAt) {
+                                            if (a.createdAt == b.createdAt) {
                                                 return 0;
                                             }
                                             return a.createdAt <=
@@ -201,8 +216,16 @@ module.exports = (server, useSession, redisClient) => {
                                                 : 1;
                                         };
                                         message.sort(dateSort);
-                                        io.to(socket.id).emit('private get message', message);
-                                        io.emit('private get message', message);
+                                        if (customHandshake.session.user
+                                            .id <= to) {
+                                            io.to(customHandshake.session.user
+                                                .id + to).emit('private get message', message);
+                                        }
+                                        else {
+                                            io.to(to +
+                                                customHandshake.session
+                                                    .user.id).emit('private get message', message);
+                                        }
                                     });
                                 }
                                 else {
@@ -222,11 +245,30 @@ module.exports = (server, useSession, redisClient) => {
             });
         });
         // 귓속말 채팅 내용
-        socket.on('get private message', (from, to) => {
+        socket.on('get private message', (to) => {
             console.log('get private!');
+            for (let id of socket.rooms) {
+                console.log('ID!!', id);
+                if (customHandshake.session.user.id <= to) {
+                    const roomId = customHandshake.session.user.id + to;
+                    if (id !== socket.id && id !== roomId) {
+                        console.log('SOCKET LEAVE', id);
+                        socket.leave(id);
+                    }
+                }
+                else {
+                    const roomId = to + customHandshake.session.user.id;
+                    if (id !== socket.id && id !== roomId) {
+                        console.log('SOCKET LEAVE', id);
+                        socket.leave(id);
+                    }
+                }
+            }
+            console.log('adapter rooms : ', io.sockets.adapter.rooms);
+            console.log('socket rooms : ', socket.rooms);
             // 존재하는 유저인지 파악
             Promise.all([
-                account_1.default.findOne({ id: from }),
+                account_1.default.findOne({ id: customHandshake.session.user.id }),
                 account_1.default.findOne({ id: to }),
             ]).then((users) => {
                 const [fromUser, toUser] = users;
@@ -251,8 +293,12 @@ module.exports = (server, useSession, redisClient) => {
                             return a.createdAt <= b.createdAt ? -1 : 1;
                         };
                         message.sort(dateSort);
-                        io.to(socket.id).emit('private get message', message);
-                        // io.emit('private get message', message);
+                        if (customHandshake.session.user.id <= to) {
+                            io.to(customHandshake.session.user.id + to).emit('private get message', message);
+                        }
+                        else {
+                            io.to(to + customHandshake.session.user.id).emit('private get message', message);
+                        }
                     });
                 }
                 else {
